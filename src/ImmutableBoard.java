@@ -22,6 +22,6 @@ public interface ImmutableBoard<Move> {
 
     ImmutableBoard<Move> flip();
     boolean isFlipped();
-    String toString();
+
 }
 

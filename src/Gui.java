@@ -1,20 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Button;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Arrays;
-import java.util.stream.IntStream;
 
 
 public class Gui extends JFrame implements MouseListener {
     //----------Graphic------------------------------------
     JPanel panel = new JPanel();
-    Field buttons[] = new Field[9];
+    static Field buttons[] = new Field[9];
     static boolean gameType = false;
-
+    JButton button1, button2;
     static Gui game;
 
     public static void main(String[] args) { game = new Gui(); }
@@ -35,13 +30,13 @@ public class Gui extends JFrame implements MouseListener {
             panel.add(new JLabel(" Write your Name"));
             JTextField input = new JTextField();
             panel.add(input);
-            panel.add(new JButton("Confirm")).addMouseListener(this);
-            panel.add(new JButton("Cancel"));
+            panel.add(button1 = new JButton("Confirm")).addMouseListener(this);
+            panel.add(button2 = new JButton("Cancel")).addMouseListener(this);
         } else {
             setSize(600, 600);
             panel.setLayout(new GridLayout(3, 3));
             for (int i = 0; i < 9; i++) {
-                buttons[i] = new Field();
+                buttons[i] = new Field(this);
                 panel.add(buttons[i]);
             }
         }
@@ -51,9 +46,12 @@ public class Gui extends JFrame implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        gameType = true;
-        setVisible(false);
-        new Gui();
+        if(e.getSource() == button1){
+            gameType = true;
+            setVisible(false);
+            new Gui();
+        } else if(e.getSource() == button2) System.exit(0);
+
     }
 
     @Override

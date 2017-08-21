@@ -15,11 +15,9 @@ public class Gui extends JFrame implements MouseListener {
     Field buttons[] = new Field[9];
     static boolean gameType = false;
 
-    static TicTacToe game = new TicTacToe();
+    static Gui game;
 
-    public static void main(String[] args) {
-        new Gui();
-    }
+    public static void main(String[] args) { game = new Gui(); }
 
 
     public Gui() {
@@ -76,5 +74,10 @@ public class Gui extends JFrame implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+    public  void newGame() {
+        gameType = true;
+        setVisible(false);
+        new Gui();
     }
 }

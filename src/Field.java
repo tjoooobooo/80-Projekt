@@ -32,9 +32,7 @@ public class Field extends JButton implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch(val){
             case 1 :
-                if(isWin() || isDraw()){
-                    break;
-                }
+                if(isWin() || isDraw()) break;
                 setIcon(X);
                 player = 1;
                 board[fieldnumber] = 1;
@@ -51,8 +49,13 @@ public class Field extends JButton implements ActionListener {
                 setIcon(null);
 
         }
-        for(int i = 0; i<9; i++) System.out.print(board[i]+" ,");
-        System.out.println();
+        if(isWin()) {
+            int tmp = JOptionPane.showConfirmDialog(null, "Player " + (val == 1 ? "X" : "O") + " has won", "Game End", JOptionPane.OK_CANCEL_OPTION);
+            if(tmp == 0) {
+
+            }
+            else System.exit(0);
+        }
         val = -val;
     }
 

@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
 public class Field extends JButton implements ActionListener {
     ImageIcon X,O;
     static int val = 1;
@@ -14,11 +13,11 @@ public class Field extends JButton implements ActionListener {
 
     public Field(Gui game){
         this.game = game;
-        X = new ImageIcon(this.getClass().getResource("X.png"));
+        X = new ImageIcon("res/cat.png");
         Image imageX = X.getImage();
         Image newX = imageX.getScaledInstance(200,200, Image.SCALE_SMOOTH);
         X = new ImageIcon(newX);
-        O = new ImageIcon(this.getClass().getResource("O.png"));
+        O = new ImageIcon("res/affe.jpg");
         Image imageO = O.getImage();
         Image newO = imageO.getScaledInstance(180,180, Image.SCALE_SMOOTH);
         O = new ImageIcon(newO);
@@ -44,7 +43,6 @@ public class Field extends JButton implements ActionListener {
                 setIcon(null);
         }
         t3 = tmp;
-        System.out.println(t3.toString());
         if(t3.isWin() || t3.isDraw()) gameOver();
             else {
             int zug = (new Algorithmen(t3).minimax()).getT3();
@@ -61,7 +59,8 @@ public class Field extends JButton implements ActionListener {
     public void gameOver() {
         int nextGame;
         if(t3.isWin()){
-            nextGame = JOptionPane.showConfirmDialog(null, "Player " + (val == 1 ? "X" : "O") + " has won\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
+            nextGame = JOptionPane.showConfirmDialog(null, (val == 1 ? Gui.name : "Computer") + " has won\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
+            val = -val;
         } else nextGame = JOptionPane.showConfirmDialog(null, "Game is draw\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
         if(nextGame == 0) {
             val = -val;

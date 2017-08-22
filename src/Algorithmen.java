@@ -7,7 +7,7 @@ import java.util.Random;
  */
 public class Algorithmen{
     Move gespeicherterZug = new Move(new int[]{9});
-    int gewuenschteTiefe = 2;
+    int gewuenschteTiefe = 9;
     List<List<Move>> brain = new ArrayList<List<Move>>();
     ImmutableBoard<Move> game;
     int turn = +1;

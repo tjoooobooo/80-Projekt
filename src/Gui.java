@@ -15,14 +15,15 @@ public class Gui extends JFrame implements MouseListener {
     JComboBox gameType = new JComboBox();
     JTextField input = new JTextField();
     static String name;
+
     public static void main(String[] args) { game = new Gui(); }
+
     JPanel window = new JPanel();
 
 
 
     public Gui() {
         super("Tic-Tac-Toe");
-
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         if (!type) {
@@ -39,17 +40,17 @@ public class Gui extends JFrame implements MouseListener {
         } else {
             JLabel field = new JLabel();
             setSize(600, 600);
-            panel.setLayout(new GridLayout(2,2));
+            //panel.setLayout(new GridLayout(2,2));
 
-            field.setLayout(new GridLayout(3,3));
+            panel.setLayout(new GridLayout(3,3));
             for (int i = 0; i < 9; i++) {
-                buttons[i] = new Field(this);
-                field.add(buttons[i]);
+                //buttons[i] = new Field(this);
+                panel.add(buttons[i]);
             }
-            panel.add(field);
+            /*panel.add(field);
             panel.add(new JLabel("hi spielan"));
             panel.add(new JLabel("hi spielan"));
-            panel.add(new JLabel("hi spielan"));
+            panel.add(new JLabel("hi spielan"));*/
         }
         add(panel);
         setVisible(true);

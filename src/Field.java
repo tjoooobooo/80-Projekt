@@ -9,9 +9,9 @@ public class Field extends JButton implements ActionListener {
     static int counter = 0;
     int fieldnumber = counter;
     static TicTacToe t3 = new TicTacToe();
-    Gui game;
+    Layout game;
 
-    public Field(Gui game){
+    public Field(Layout game){
         this.game = game;
         X = new ImageIcon("res/cat.png");
         Image imageX = X.getImage();
@@ -48,7 +48,7 @@ public class Field extends JButton implements ActionListener {
             int zug = (new Algorithmen(t3).minimax()).getT3();
             tmp = (TicTacToe) t3.makeMove(new Move(zug));
             val = -val;
-            Gui.buttons[zug].setIcon(val == 1 ? X : O);
+            Layout.buttons[zug].setIcon(val == 1 ? X : O);
             t3 = tmp;
         }
         if(t3.isWin() || t3.isDraw()) {

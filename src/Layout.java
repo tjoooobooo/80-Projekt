@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -16,13 +15,14 @@ public class Layout extends JFrame {
     private JLabel jLabel2;
     private JLabel jLabel3;
     private JLabel jLabel4;
-    private JLabel jLabel5;
-    private JLabel jLabel6;
+    static JLabel player1Wins;
+    static JLabel player2Wins;
     private JLabel jLabel7;
     private JLabel jLabel8;
     private JPanel field;
     private JScrollPane jScrollPane1;
     private JTextPane jTextPane1;
+    static boolean againstPc = false;
 
     public Layout() {
 
@@ -34,8 +34,8 @@ public class Layout extends JFrame {
         jLabel2 = new JLabel();
         jLabel3 = new JLabel();
         jLabel4 = new JLabel();
-        jLabel5 = new JLabel();
-        jLabel6 = new JLabel();
+        player1Wins = new JLabel();
+        player2Wins = new JLabel();
         jLabel7 = new JLabel();
         jLabel8 = new JLabel();
         background = new JComboBox<>();
@@ -61,19 +61,12 @@ public class Layout extends JFrame {
         gameStone.setModel(new DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel1.setText("Select Stone");
-
         jLabel2.setText("Player1 wins:");
-
         jLabel3.setText("Player2 wins:");
-
         jLabel4.setText("Draws: ");
-
-        jLabel5.setText("jLabel5");
-
-        jLabel6.setText("jLabel6");
-
+        player1Wins.setText("0");
+        player2Wins.setText("0");
         jLabel7.setText("jLabel7");
-
         jLabel8.setText("Select Background");
 
         background.setModel(new DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -81,7 +74,7 @@ public class Layout extends JFrame {
         againstComputer.setText("Play against Computer");
         againstComputer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-
+                againstPc = !againstPc;
             }
         });
 
@@ -120,12 +113,12 @@ public class Layout extends JFrame {
                                                                                 .addGap(17, 17, 17)
                                                                                 .addComponent(jLabel2)
                                                                                 .addGap(18, 18, 18)
-                                                                                .addComponent(jLabel5))
+                                                                                .addComponent(player1Wins))
                                                                         .addGroup(layout.createSequentialGroup()
                                                                                 .addGap(17, 17, 17)
                                                                                 .addComponent(jLabel3)
                                                                                 .addGap(18, 18, 18)
-                                                                                .addComponent(jLabel6))
+                                                                                .addComponent(player2Wins))
                                                                         .addGroup(layout.createSequentialGroup()
                                                                                 .addGap(44, 44, 44)
                                                                                 .addComponent(jLabel4)
@@ -147,11 +140,11 @@ public class Layout extends JFrame {
                                                 .addGap(7, 7, 7)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(jLabel2)
-                                                        .addComponent(jLabel5))
+                                                        .addComponent(player1Wins))
                                                 .addGap(11, 11, 11)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(jLabel3)
-                                                        .addComponent(jLabel6))
+                                                        .addComponent(player2Wins))
                                                 .addGap(11, 11, 11)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(jLabel4)
@@ -175,8 +168,9 @@ public class Layout extends JFrame {
     }
     public  void newGame() {
         type = true;
-        setVisible(false);
-        new Layout();
+        //setVisible(false);
+        for(int i=0; i<9; i++) buttons[i].setIcon(null);
+        //new Layout();
     }
     public static void main(String args[]) {
         new Layout();

@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 public class Layout extends JFrame {
     static boolean type = false;
@@ -10,8 +8,8 @@ public class Layout extends JFrame {
 
     private JButton jButton10;
     private JCheckBox againstComputer;
-    private JComboBox<String> gameStone;
-    private JComboBox<String> background;
+    static JComboBox<String> gameStone;
+    static JComboBox<String> background;
     private JLabel jLabel1;
     private JLabel jLabel2;
     private JLabel jLabel3;
@@ -25,6 +23,8 @@ public class Layout extends JFrame {
     private JTextPane jTextPane1;
     static boolean againstPc = false;
     static String name;
+
+    Network network = new Network();
 
     public Layout() {
 
@@ -56,8 +56,6 @@ public class Layout extends JFrame {
 
         jScrollPane1.setViewportView(jTextPane1);
 
-        gameStone.setModel(new DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
-
         jLabel1.setText("Select Stone");
         jLabel2.setText(name + " wins:");
         jLabel3.setText("Player2 wins:");
@@ -67,6 +65,13 @@ public class Layout extends JFrame {
         draws.setText("0");
         jLabel8.setText("Select Background");
 
+        gameStone.setModel(new DefaultComboBoxModel<>(new String[]{"X","O","affe","cat","penguin"}));
+        gameStone.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
         background.setModel(new DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
         againstComputer.setText("Play against Computer");
@@ -98,6 +103,9 @@ public class Layout extends JFrame {
             button1.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    if(gameType.getSelectedIndex() == 1) {
+                        network.setIP(inputIP.getText());
+                    }
                     name = inputName.getText();
                     System.out.println(name);
                     type = !type;
@@ -202,7 +210,6 @@ public class Layout extends JFrame {
                                     .addGap(1, 1, 1)
                                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
             );
-
             pack();
             setVisible(true);
         }

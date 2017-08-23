@@ -18,6 +18,9 @@ public class TicTacToe implements ImmutableBoard<Move>{
         turn = +1;
         depth = 0;
     }
+    public int[] getBoard(){
+        return board;
+    }
 
     public TicTacToe(TicTacToe b, Move move) {
         this.board = Arrays.copyOf(b.board, 9);

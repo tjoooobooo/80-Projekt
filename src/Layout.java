@@ -17,7 +17,7 @@ public class Layout extends JFrame {
     private JLabel jLabel4;
     static JLabel player1Wins;
     static JLabel player2Wins;
-    private JLabel jLabel7;
+    static JLabel draws;
     private JLabel jLabel8;
     private JPanel field;
     private JScrollPane jScrollPane1;
@@ -36,7 +36,7 @@ public class Layout extends JFrame {
         jLabel4 = new JLabel();
         player1Wins = new JLabel();
         player2Wins = new JLabel();
-        jLabel7 = new JLabel();
+        draws = new JLabel();
         jLabel8 = new JLabel();
         background = new JComboBox<>();
         againstComputer = new JCheckBox();
@@ -66,7 +66,7 @@ public class Layout extends JFrame {
         jLabel4.setText("Draws: ");
         player1Wins.setText("0");
         player2Wins.setText("0");
-        jLabel7.setText("jLabel7");
+        draws.setText("0");
         jLabel8.setText("Select Background");
 
         background.setModel(new DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -123,7 +123,7 @@ public class Layout extends JFrame {
                                                                                 .addGap(44, 44, 44)
                                                                                 .addComponent(jLabel4)
                                                                                 .addGap(18, 18, 18)
-                                                                                .addComponent(jLabel7))
+                                                                                .addComponent(draws))
                                                                         .addComponent(jButton10))
                                                                 .addGap(0, 0, Short.MAX_VALUE)))))
                                 .addContainerGap())
@@ -148,7 +148,7 @@ public class Layout extends JFrame {
                                                 .addGap(11, 11, 11)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addComponent(jLabel4)
-                                                        .addComponent(jLabel7))
+                                                        .addComponent(draws))
                                                 .addGap(18, 18, 18)
                                                 .addComponent(jButton10)
                                                 .addGap(157, 157, 157)

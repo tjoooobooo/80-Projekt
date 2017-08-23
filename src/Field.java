@@ -13,6 +13,7 @@ public class Field extends JButton implements ActionListener {
 
     static int p1Wins = 0;
     static int p2Wins = 0;
+    static int draws = 0;
 
     public Field(Layout game){
         this.game = game;
@@ -66,7 +67,10 @@ public class Field extends JButton implements ActionListener {
             else p2Wins++;
             nextGame = JOptionPane.showConfirmDialog(null, (val == 1 ? Gui.name : "Computer") + " has won\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
             val = -val;
-        } else nextGame = JOptionPane.showConfirmDialog(null, "Game is draw\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
+        } else {
+            draws++;
+            nextGame = JOptionPane.showConfirmDialog(null, "Game is draw\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
+        }
         if(nextGame == 0) {
             val = -val;
             counter = 0;
@@ -75,5 +79,6 @@ public class Field extends JButton implements ActionListener {
         } else System.exit(0);
         Layout.player1Wins.setText(String.valueOf(p1Wins));
         Layout.player2Wins.setText(String.valueOf(p2Wins));
+        Layout.draws.setText(String.valueOf(draws));
     }
 }

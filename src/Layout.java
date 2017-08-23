@@ -24,6 +24,7 @@ public class Layout extends JFrame {
     private JScrollPane jScrollPane1;
     private JTextPane jTextPane1;
     static boolean againstPc = false;
+    static String name;
 
     public Layout() {
 
@@ -47,6 +48,7 @@ public class Layout extends JFrame {
         JComboBox gameType = new JComboBox();
         JTextField input = new JTextField();
         JButton button1, button2;
+        name = "Player1";
         //--------------------------------
         setTitle("Tic-Tac-Toe");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -94,7 +96,11 @@ public class Layout extends JFrame {
             button1.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    name = input.getText();
+                    System.out.println(name);
                     type = !type;
+                    setVisible(false);
+                    new Layout();
                 }
             });
             button2.addActionListener(new ActionListener() {

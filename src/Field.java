@@ -65,7 +65,7 @@ public class Field extends JButton implements ActionListener {
         if(t3.isWin()){
             if(val == 1) p1Wins++;
             else p2Wins++;
-            nextGame = JOptionPane.showConfirmDialog(null, (val == 1 ? Gui.name : "Computer") + " has won\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
+            nextGame = JOptionPane.showConfirmDialog(null, (val == 1 ? Layout.name : "Computer") + " has won\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
             val = -val;
         } else {
             draws++;

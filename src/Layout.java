@@ -25,10 +25,6 @@ public class Layout extends JFrame {
     private JTextPane jTextPane1;
 
     public Layout() {
-        initComponents();
-    }
-
-    private void initComponents() {
 
         field = new JPanel();
         jScrollPane1 = new JScrollPane();
@@ -47,7 +43,7 @@ public class Layout extends JFrame {
         jButton10 = new JButton();
         jButton10 = new JButton();
 
-
+        setTitle("Tic-Tac-Toe");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         //setPreferredSize(new java.awt.Dimension(610, 600));
         setSize(new java.awt.Dimension(620, 600));
@@ -172,6 +168,7 @@ public class Layout extends JFrame {
         );
 
         pack();
+        setVisible(true);
     }
     public  void newGame() {
         type = true;
@@ -179,6 +176,6 @@ public class Layout extends JFrame {
         new Layout();
     }
     public static void main(String args[]) {
-        new Layout().setVisible(true);
+        new Layout();
     }
 }

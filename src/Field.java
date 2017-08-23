@@ -13,13 +13,13 @@ public class Field extends JButton implements ActionListener {
 
     public Field(Layout game){
         this.game = game;
-        X = new ImageIcon("res/cat.png");
+        X = new ImageIcon("res/X.png");
         Image imageX = X.getImage();
-        Image newX = imageX.getScaledInstance(200,200, Image.SCALE_SMOOTH);
+        Image newX = imageX.getScaledInstance(130,130, Image.SCALE_SMOOTH);
         X = new ImageIcon(newX);
-        O = new ImageIcon("res/affe.jpg");
+        O = new ImageIcon("res/O.png");
         Image imageO = O.getImage();
-        Image newO = imageO.getScaledInstance(180,180, Image.SCALE_SMOOTH);
+        Image newO = imageO.getScaledInstance(130,130, Image.SCALE_SMOOTH);
         O = new ImageIcon(newO);
         this.addActionListener(this);
         counter++;

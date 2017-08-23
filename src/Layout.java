@@ -48,7 +48,6 @@ public class Layout extends JFrame {
         JComboBox gameType = new JComboBox();
         JTextField input = new JTextField();
         JButton button1, button2;
-        name = "Player1";
         //--------------------------------
         setTitle("Tic-Tac-Toe");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -59,7 +58,7 @@ public class Layout extends JFrame {
         gameStone.setModel(new DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
         jLabel1.setText("Select Stone");
-        jLabel2.setText("Player1 wins:");
+        jLabel2.setText(name + " wins:");
         jLabel3.setText("Player2 wins:");
         jLabel4.setText("Draws: ");
         player1Wins.setText("0");

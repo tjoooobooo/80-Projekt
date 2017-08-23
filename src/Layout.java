@@ -46,7 +46,8 @@ public class Layout extends JFrame {
         jButton10 = new JButton();
         //-------erstes Fenster----------
         JComboBox gameType = new JComboBox();
-        JTextField input = new JTextField();
+        JTextField inputName = new JTextField();
+        JTextField inputIP = new JTextField();
         JButton button1, button2;
         //--------------------------------
         setTitle("Tic-Tac-Toe");
@@ -83,19 +84,21 @@ public class Layout extends JFrame {
         });
         if (!type) {
             setSize(500, 140);
-            getContentPane().setLayout(new GridLayout(3, 2));
+            getContentPane().setLayout(new GridLayout(4, 2));
             add(new JLabel(" Choose Game Type"));
             gameType.addItem("Singleplayer");
             gameType.addItem("Multiplayer");
             add(gameType);
             add(new JLabel(" Write your Name"));
-            add(input);
+            add(inputName);
+            add(new JLabel("Choose IP-Adress"));
+            add(inputIP);
             button1 = new JButton("Confirm");
             button2 = new JButton("Cancel");
             button1.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    name = input.getText();
+                    name = inputName.getText();
                     System.out.println(name);
                     type = !type;
                     setVisible(false);

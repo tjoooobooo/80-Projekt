@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 public class Layout extends JFrame {
     static boolean type = false;
@@ -58,20 +59,16 @@ public class Layout extends JFrame {
 
         jLabel1.setText("Select Stone");
         jLabel2.setText(name + " wins:");
-        jLabel3.setText("Player2 wins:");
+        jLabel3.setText("Computer wins:");
         jLabel4.setText("Draws: ");
         player1Wins.setText("0");
         player2Wins.setText("0");
         draws.setText("0");
         jLabel8.setText("Select Background");
 
-        gameStone.setModel(new DefaultComboBoxModel<>(new String[]{"X","O","affe","cat","penguin"}));
-        gameStone.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        DefaultComboBoxModel stones = new DefaultComboBoxModel<>(new String[]{"X","O","affe","cat","penguin"});
+        gameStone.setModel(stones);
 
-            }
-        });
         background.setModel(new DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
         againstComputer.setText("Play against Computer");
@@ -105,9 +102,14 @@ public class Layout extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     if(gameType.getSelectedIndex() == 1) {
                         network.setIP(inputIP.getText());
+                        try {
+                            network.dos.writeUTF("!playerName=" + name);
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                        //while()
                     }
                     name = inputName.getText();
-                    System.out.println(name);
                     type = !type;
                     setVisible(false);
                     new Layout();
@@ -217,6 +219,7 @@ public class Layout extends JFrame {
     public  void newGame() {
         type = true;
         //setVisible(false);
+        gameStone.setEnabled(true);
         for(int i=0; i<9; i++) buttons[i].setIcon(null);
         //new Layout();
     }

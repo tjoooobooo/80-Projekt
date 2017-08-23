@@ -2,9 +2,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class Field extends JButton implements ActionListener {
     ImageIcon X,O,AFFE,KATZE,PENGUIN;
+    ImageIcon icon;
     ImageIcon[] icons = new ImageIcon[5];
     static int val = 1;
     static int counter = 0;
@@ -26,19 +30,20 @@ public class Field extends JButton implements ActionListener {
             Image newImage = image.getScaledInstance(130, 130, Image.SCALE_SMOOTH);
             icons[i] = new ImageIcon(newImage);
         }
-/*
-        X = new ImageIcon("res/" + stones[Layout.gameStone.getSelectedIndex()]);
-        Image imageX = X.getImage();
-        Image newX = imageX.getScaledInstance(130,130, Image.SCALE_SMOOTH);
-        X = new ImageIcon(newX);
-        O = new ImageIcon("res/O.png");
-        Image imageO = O.getImage();
-        Image newO = imageO.getScaledInstance(130,130, Image.SCALE_SMOOTH);
-        O = new ImageIcon(newO);*/
+        /*--------AFFE GIF---------------
+        File file = new File("res/monkey.gif");
+        URL url = null;
+        try {
+            url = file.toURI().toURL();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        icon = new ImageIcon(url);*/
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        Layout.gameStone.setEnabled(false);
         System.out.println(Layout.gameStone.getSelectedIndex());
         TicTacToe tmp = new TicTacToe();
         switch(val){

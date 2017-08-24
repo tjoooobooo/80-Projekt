@@ -24,6 +24,7 @@ public class Layout extends JFrame {
     private JTextPane jTextPane1;
     static boolean againstPc = false;
     static String name;
+    static String enemyName;
 
     Network network = new Network();
 
@@ -48,6 +49,7 @@ public class Layout extends JFrame {
         //-------erstes Fenster----------
         JComboBox gameType = new JComboBox();
         JTextField inputName = new JTextField();
+        JTextField inputEnemyName = new JTextField();
         JTextField inputIP = new JTextField();
         JButton button1, button2;
         //--------------------------------
@@ -59,17 +61,26 @@ public class Layout extends JFrame {
 
         jLabel1.setText("Select Stone");
         jLabel2.setText(name + " wins:");
-        jLabel3.setText("Computer wins:");
+        jLabel3.setText(enemyName + " wins:");
         jLabel4.setText("Draws: ");
         player1Wins.setText("0");
         player2Wins.setText("0");
         draws.setText("0");
         jLabel8.setText("Select Background");
 
-        DefaultComboBoxModel stones = new DefaultComboBoxModel<>(new String[]{"X","O","affe","cat","penguin"});
+        DefaultComboBoxModel stones = new DefaultComboBoxModel<>(new String[]{"X","O","Monkey","Cat", "Penguin","Crown","Smiley"});
         gameStone.setModel(stones);
 
-        background.setModel(new DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+        background.setModel(new DefaultComboBoxModel<>(new String[]{"default", "green", "blue", "pink", "yellow"}));
+        background.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color[] colors = {null, Color.green, Color.blue, Color.pink, Color.yellow};
+                for(Field button : buttons){
+                    button.setBackground(colors[background.getSelectedIndex()]);
+                }
+            }
+        });
 
         againstComputer.setText("Play against Computer");
         againstComputer.addActionListener(new ActionListener() {
@@ -85,14 +96,18 @@ public class Layout extends JFrame {
             }
         });
         if (!type) {
-            setSize(500, 140);
+            setSize(350, 140);
             getContentPane().setLayout(new GridLayout(4, 2));
             add(new JLabel(" Choose Game Type"));
             gameType.addItem("Singleplayer");
             gameType.addItem("Multiplayer");
             add(gameType);
             add(new JLabel(" Write your Name"));
-            add(inputName);
+            JLabel names = new JLabel();
+            names.setLayout(new GridLayout(1,2));
+            names.add(inputName);
+            names.add(inputEnemyName);
+            add(names);
             add(new JLabel("Choose IP-Adress"));
             add(inputIP);
             button1 = new JButton("Confirm");
@@ -109,7 +124,8 @@ public class Layout extends JFrame {
                         }
                         //while()
                     }
-                    name = inputName.getText();
+                    name = inputName.getText().isEmpty() ? "Player1" : inputName.getText();
+                    enemyName = inputEnemyName.getText().isEmpty() ? "Computer" : inputEnemyName.getText();
                     type = !type;
                     setVisible(false);
                     new Layout();

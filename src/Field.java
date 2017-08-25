@@ -8,7 +8,8 @@ import java.net.URL;
 
 public class Field extends JButton implements ActionListener {
     ImageIcon icon;
-    ImageIcon[] icons = new ImageIcon[7];
+    String[] stones = {"X.png","O.png","monkey.png","cat.png","penguin.png","krone.png", "smiley.png"};
+    ImageIcon[] icons = new ImageIcon[stones.length];
     static int val = 1;
     static int counter = 0;
     int fieldnumber = counter;
@@ -18,7 +19,7 @@ public class Field extends JButton implements ActionListener {
     static int p1Wins = 0;
     static int p2Wins = 0;
     static int draws = 0;
-    String[] stones = {"X.png","O.png","affe.jpg","cat.png","penguin.png","krone.png", "smiley.png"};
+
     public Field(Layout game){
         this.game = game;
         counter++;
@@ -42,12 +43,13 @@ public class Field extends JButton implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Layout.gameStone.setEnabled(false);
+        System.out.println(Layout.gameChoose);
+        game.gameStone.setEnabled(false);
         TicTacToe tmp = new TicTacToe();
         switch(val){
             case 1 :
                 if(t3.isWin() || t3.isDraw()) break;
-                setIcon(icons[Layout.gameStone.getSelectedIndex()]);
+                setIcon(icons[game.gameStone.getSelectedIndex()]);
                 tmp = (TicTacToe) t3.makeMove(new Move(fieldnumber));
                 break;
             case -1 :
@@ -61,10 +63,10 @@ public class Field extends JButton implements ActionListener {
         val = -val;
         t3 = tmp;
         if(t3.isWin() || t3.isDraw()) gameOver();
-            else if(Layout.againstPc) {
+            else if(Layout.gameChoose == 1) {
             int zug = (new Algorithmen(t3).minimax()).getT3();
             tmp = (TicTacToe) t3.makeMove(new Move(zug));
-            Layout.buttons[zug].setIcon(val == 1 ? icons[Layout.gameStone.getSelectedIndex()] : icons[1]);
+            game.buttons[zug].setIcon(val == 1 ? icons[game.gameStone.getSelectedIndex()] : icons[1]);
             val = -val;
             t3 = tmp;
         }
@@ -77,7 +79,7 @@ public class Field extends JButton implements ActionListener {
         if(t3.isWin()){
             if(val == -1) p1Wins++;
             else p2Wins++;
-            nextGame = JOptionPane.showConfirmDialog(null, (val == -1 ? Layout.name : Layout.enemyName) + " has won\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
+            nextGame = JOptionPane.showConfirmDialog(null, (val == -1 ? game.name : game.enemyName) + " has won\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
         } else {
             draws++;
             nextGame = JOptionPane.showConfirmDialog(null, "Game is draw\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
@@ -88,8 +90,8 @@ public class Field extends JButton implements ActionListener {
             game.newGame();
             t3 = new TicTacToe();
         } else System.exit(0);
-        Layout.player1Wins.setText(String.valueOf(p1Wins));
-        Layout.player2Wins.setText(String.valueOf(p2Wins));
-        Layout.draws.setText(String.valueOf(draws));
+        game.player1Wins.setText(String.valueOf(p1Wins));
+        game.player2Wins.setText(String.valueOf(p2Wins));
+        game.draws.setText(String.valueOf(draws));
     }
 }

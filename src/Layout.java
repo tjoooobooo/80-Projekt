@@ -5,26 +5,27 @@ import java.io.IOException;
 
 public class Layout extends JFrame {
     static boolean type = false;
-    static Field[] buttons = new Field[9];
+    public Field[] buttons = new Field[9];
 
     private JButton jButton10;
     private JCheckBox againstComputer;
-    static JComboBox<String> gameStone;
-    static JComboBox<String> background;
+    public JComboBox<String> gameStone;
+    public JComboBox<String> background;
     private JLabel jLabel1;
     private JLabel jLabel2;
     private JLabel jLabel3;
     private JLabel jLabel4;
-    static JLabel player1Wins;
-    static JLabel player2Wins;
-    static JLabel draws;
+    public JLabel player1Wins;
+    public JLabel player2Wins;
+    public JLabel draws;
     private JLabel jLabel8;
     private JPanel field;
     private JScrollPane jScrollPane1;
     private JTextPane jTextPane1;
-    static boolean againstPc = false;
     static String name;
     static String enemyName;
+    public JComboBox gameType;
+    public static int gameChoose;
 
     Network network = new Network();
 
@@ -47,7 +48,6 @@ public class Layout extends JFrame {
         jButton10 = new JButton();
         jButton10 = new JButton();
         //-------erstes Fenster----------
-        JComboBox gameType = new JComboBox();
         JTextField inputName = new JTextField();
         JTextField inputEnemyName = new JTextField();
         JTextField inputIP = new JTextField();
@@ -83,11 +83,6 @@ public class Layout extends JFrame {
         });
 
         againstComputer.setText("Play against Computer");
-        againstComputer.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                againstPc = !againstPc;
-            }
-        });
 
         jButton10.setText("show recommended play");
         jButton10.addActionListener(new ActionListener() {
@@ -99,8 +94,7 @@ public class Layout extends JFrame {
             setSize(350, 140);
             getContentPane().setLayout(new GridLayout(4, 2));
             add(new JLabel(" Choose Game Type"));
-            gameType.addItem("Singleplayer");
-            gameType.addItem("Multiplayer");
+            gameType = new JComboBox(new String[]{"Local(PVP)", "Local(PVC)", "Online(PVP"});
             add(gameType);
             add(new JLabel(" Write your Name"));
             JLabel names = new JLabel();
@@ -115,20 +109,17 @@ public class Layout extends JFrame {
             button1.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(gameType.getSelectedIndex() == 1) {
-                        network.setIP(inputIP.getText());
-                        try {
-                            network.dos.writeUTF("!playerName=" + name);
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
-                        }
+                    if(gameType.getSelectedIndex() == 2) {
+                            network.setIP(inputIP.getText());
                         //while()
                     }
+                    gameChoose = gameType.getSelectedIndex();
                     name = inputName.getText().isEmpty() ? "Player1" : inputName.getText();
                     enemyName = inputEnemyName.getText().isEmpty() ? "Computer" : inputEnemyName.getText();
                     type = !type;
                     setVisible(false);
                     new Layout();
+
                 }
             });
             button2.addActionListener(new ActionListener() {
@@ -150,30 +141,30 @@ public class Layout extends JFrame {
                 buttons[i] = new Field(this);
                 field.add(buttons[i]);
             }
-            javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+            GroupLayout layout = new GroupLayout(getContentPane());
             getContentPane().setLayout(layout);
             layout.setHorizontalGroup(
-                    layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                     .addGap(10, 10, 10)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                             .addComponent(jScrollPane1)
                                             .addGroup(layout.createSequentialGroup()
-                                                    .addComponent(field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                     .addGap(18, 18, 18)
-                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                             .addGroup(layout.createSequentialGroup()
                                                                     .addGap(0, 18, Short.MAX_VALUE)
                                                                     .addComponent(jLabel8)
                                                                     .addGap(18, 18, 18)
-                                                                    .addComponent(background, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                    .addComponent(background, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE))
                                                             .addGroup(layout.createSequentialGroup()
-                                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                                     .addComponent(jLabel1)
                                                                     .addGap(18, 18, 18)
-                                                                    .addComponent(gameStone, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                    .addComponent(gameStone, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE))
                                                             .addGroup(layout.createSequentialGroup()
-                                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                                             .addComponent(againstComputer)
                                                                             .addGroup(layout.createSequentialGroup()
                                                                                     .addGap(17, 17, 17)
@@ -195,42 +186,45 @@ public class Layout extends JFrame {
                                     .addContainerGap())
             );
             layout.setVerticalGroup(
-                    layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                     .addGap(11, 11, 11)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                            .addComponent(field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                             .addGroup(layout.createSequentialGroup()
                                                     .addGap(11, 11, 11)
                                                     .addComponent(againstComputer)
                                                     .addGap(7, 7, 7)
-                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                             .addComponent(jLabel2)
                                                             .addComponent(player1Wins))
                                                     .addGap(11, 11, 11)
-                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                             .addComponent(jLabel3)
                                                             .addComponent(player2Wins))
                                                     .addGap(11, 11, 11)
-                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                             .addComponent(jLabel4)
                                                             .addComponent(draws))
                                                     .addGap(18, 18, 18)
                                                     .addComponent(jButton10)
                                                     .addGap(157, 157, 157)
-                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                             .addComponent(jLabel8)
-                                                            .addComponent(background, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                            .addComponent(background, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                                     .addGap(18, 18, 18)
-                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                            .addComponent(gameStone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                            .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+                                                            .addComponent(gameStone, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
                                     .addGap(1, 1, 1)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
             );
             pack();
             setVisible(true);
         }
+    }
+    public int getGameType() {
+        return gameType.getSelectedIndex();
     }
     public  void newGame() {
         type = true;

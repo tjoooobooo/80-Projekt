@@ -25,16 +25,14 @@ public class Network {
 
 
     public Network() {
-        /*Scanner scanner = new Scanner(System.in);
-        System.out.println("Bitte gib deine IP ein: ");//valid ip check
-        //ip = scanner.nextLine();
-        System.out.println("Bitte gib deinen Spielernamen ein: ");
-        //name = scanner.nextLine();*/
+        //System.out.println("Bitte gib deinen Spielernamen ein: ");
+        //name = scanner.nextLine();
         //if (!connect()) initializeServer();
     }
+
     public void setIP(String ip){
-        this.ip = ip;
         if (!connect()) initializeServer();
+        this.ip = ip;
     }
 
     public void evaluateInputStream() {

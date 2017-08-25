@@ -30,7 +30,6 @@ public class Layout extends JFrame {
     Network network = new Network();
 
     public Layout() {
-
         field = new JPanel();
         jScrollPane1 = new JScrollPane();
         jTextPane1 = new JTextPane();
@@ -109,10 +108,11 @@ public class Layout extends JFrame {
             button1.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    //-------Netzwerk verbinden----------------
                     if(gameType.getSelectedIndex() == 2) {
                             network.setIP(inputIP.getText());
-                        //while()
                     }
+                    //-----------------------------------------
                     gameChoose = gameType.getSelectedIndex();
                     name = inputName.getText().isEmpty() ? "Player1" : inputName.getText();
                     enemyName = inputEnemyName.getText().isEmpty() ? "Computer" : inputEnemyName.getText();

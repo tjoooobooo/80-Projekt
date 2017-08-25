@@ -28,6 +28,7 @@ public class Main_t3 {
                 TicTacToe newGame = (TicTacToe) game.makeMove(new Move(user_entry));
                 game = newGame;
                 try {
+                    //schicken
                     network.dos.writeInt(user_entry);
                     network.dos.flush();
                 } catch (IOException e) {
@@ -39,6 +40,7 @@ public class Main_t3 {
             }
             if (!network.isYourTurn() && (network.dis.available() == 4) && (!game.isWin() || !game.isDraw())) {
                 try {
+                    //nachricht lesen
                     user_entry = network.dis.readInt();
                     TicTacToe newGame = (TicTacToe) game.makeMove(new Move(user_entry));
                     game = newGame;
@@ -62,6 +64,7 @@ public class Main_t3 {
                 }
                 System.out.println("Gib \"new\" für ein neues Spiel ein, oder \"exit\" um das Spiel zu beenden!");
                 System.out.println("[?: Hilfe]: _");
+                break;
             }
         }
     }

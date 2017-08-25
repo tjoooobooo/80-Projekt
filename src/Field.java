@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -60,9 +61,22 @@ public class Field extends JButton implements ActionListener {
             default:
                 setIcon(null);
         }
+        try {
+            game.network.dos.writeInt(fieldnumber);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
         val = -val;
         t3 = tmp;
+        int zug1 = 0;
+        try {
+            zug1 = game.network.dis.readInt();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        game.buttons[zug1].doClick();
         if(t3.isWin() || t3.isDraw()) gameOver();
+        //--------------gegen Computer---------
             else if(Layout.gameChoose == 1) {
             int zug = (new Algorithmen(t3).minimax()).getT3();
             tmp = (TicTacToe) t3.makeMove(new Move(zug));
@@ -70,6 +84,7 @@ public class Field extends JButton implements ActionListener {
             val = -val;
             t3 = tmp;
         }
+        //--------------------------------------------------------------------------------------------
         if(t3.isWin() || t3.isDraw()) {
                 gameOver();
         }

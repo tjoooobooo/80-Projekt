@@ -31,8 +31,8 @@ public class Network {
     }
 
     public void setIP(String ip){
-        if (!connect()) initializeServer();
         this.ip = ip;
+        if (!connect()) initializeServer();
     }
 
     public void evaluateInputStream() {

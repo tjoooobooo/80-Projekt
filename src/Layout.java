@@ -27,7 +27,7 @@ public class Layout extends JFrame {
     public JComboBox gameType;
     public static int gameChoose;
 
-    Network network = new Network();
+    static Network network = new Network();
 
     public Layout() {
         field = new JPanel();
@@ -54,7 +54,7 @@ public class Layout extends JFrame {
         //--------------------------------
         setTitle("Tic-Tac-Toe");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
+        setResizable(false);
 
         jScrollPane1.setViewportView(jTextPane1);
 
@@ -111,6 +111,9 @@ public class Layout extends JFrame {
                     //-------Netzwerk verbinden----------------
                     if(gameType.getSelectedIndex() == 2) {
                             network.setIP(inputIP.getText());
+                        while(!network.isAccepted() && network.getisServer()) {
+                            network.listenForServerRequest();
+                        }
                     }
                     //-----------------------------------------
                     gameChoose = gameType.getSelectedIndex();

@@ -7,7 +7,8 @@ public class Layout extends JFrame {
     static boolean type = false;
     public Field[] buttons = new Field[9];
 
-    private JButton jButton10;
+
+    private JButton recPlay;
     private JCheckBox againstComputer;
     public JComboBox<String> gameStone;
     public JComboBox<String> background;
@@ -19,7 +20,7 @@ public class Layout extends JFrame {
     public JLabel player2Wins;
     public JLabel draws;
     private JLabel jLabel8;
-    private JPanel field;
+    private static JPanel field = new JPanel();
     private JScrollPane jScrollPane1;
     private JTextPane jTextPane1;
     static String name;
@@ -30,7 +31,6 @@ public class Layout extends JFrame {
     static Network network = new Network();
 
     public Layout() {
-        field = new JPanel();
         jScrollPane1 = new JScrollPane();
         jTextPane1 = new JTextPane();
         gameStone = new JComboBox<>();
@@ -44,8 +44,8 @@ public class Layout extends JFrame {
         jLabel8 = new JLabel();
         background = new JComboBox<>();
         againstComputer = new JCheckBox();
-        jButton10 = new JButton();
-        jButton10 = new JButton();
+        recPlay = new JButton();
+        recPlay = new JButton();
         //-------erstes Fenster----------
         JTextField inputName = new JTextField();
         JTextField inputEnemyName = new JTextField();
@@ -71,10 +71,10 @@ public class Layout extends JFrame {
         gameStone.setModel(stones);
 
         background.setModel(new DefaultComboBoxModel<>(new String[]{"default", "green", "blue", "pink", "yellow"}));
+        Color[] colors = {null, Color.green, Color.blue, Color.pink, Color.yellow};
         background.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Color[] colors = {null, Color.green, Color.blue, Color.pink, Color.yellow};
                 for(Field button : buttons){
                     button.setBackground(colors[background.getSelectedIndex()]);
                 }
@@ -83,17 +83,32 @@ public class Layout extends JFrame {
 
         againstComputer.setText("Play against Computer");
 
-        jButton10.setText("show recommended play");
-        jButton10.addActionListener(new ActionListener() {
+        recPlay.setText("show recommended play");
+        recPlay.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-
+                int num = (new Algorithmen(Field.t3).minimax()).getT3();
+                Thread thread = new Thread(() -> {
+                    int counter = 0;
+                    while(counter++ < 4){
+                        if(buttons[num].getBackground() == Color.GREEN) buttons[num].setBackground(colors[background.getSelectedIndex()]);
+                        else buttons[num].setBackground(Color.GREEN);
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e){
+                            e.printStackTrace();
+                        }
+                        buttons[num].repaint();
+                    }
+                });
+                thread.setPriority(2);
+                thread.start();
             }
         });
         if (!type) {
             setSize(350, 140);
             getContentPane().setLayout(new GridLayout(4, 2));
             add(new JLabel(" Choose Game Type"));
-            gameType = new JComboBox(new String[]{"Local(PVP)", "Local(PVC)", "Online(PVP"});
+            gameType = new JComboBox(new String[]{"Local(PVP)", "Local(PVC)", "Online(PVP)"});
             add(gameType);
             add(new JLabel(" Write your Name"));
             JLabel names = new JLabel();
@@ -105,15 +120,40 @@ public class Layout extends JFrame {
             add(inputIP);
             button1 = new JButton("Confirm");
             button2 = new JButton("Cancel");
+            for (int i = 0; i < 9; i++) {
+                buttons[i] = new Field(this);
+                field.add(buttons[i]);
+            }
             button1.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     //-------Netzwerk verbinden----------------
                     if(gameType.getSelectedIndex() == 2) {
-                            network.setIP(inputIP.getText());
+                            network.setIP(inputIP.getText().isEmpty() ? "localhost" : inputIP.getText());
                         while(!network.isAccepted() && network.getisServer()) {
                             network.listenForServerRequest();
                         }
+                        Thread thread = new Thread(() -> {
+                            try{
+                                while (true) {
+                                    if (network.dis.available() == 4) {
+                                        Integer tmp = network.dis.readInt();
+                                        System.out.println("ich habe " + tmp + " bekommen");
+                                        buttons[tmp].doClick();
+                                        network.swapTurn();
+                                    }
+                                }
+                            } catch (IOException e1){
+                                e1.printStackTrace();
+                                try {
+                                    Thread.sleep(100);
+                                } catch (InterruptedException e2){
+                                    e2.printStackTrace();
+                                }
+                            }
+                        });
+                        thread.setPriority(1);
+                        thread.start();
                     }
                     //-----------------------------------------
                     gameChoose = gameType.getSelectedIndex();
@@ -122,7 +162,6 @@ public class Layout extends JFrame {
                     type = !type;
                     setVisible(false);
                     new Layout();
-
                 }
             });
             button2.addActionListener(new ActionListener() {
@@ -140,10 +179,6 @@ public class Layout extends JFrame {
             field.setPreferredSize(new Dimension(400, 400));
             field.setLayout(new GridLayout(3, 3));
 
-            for (int i = 0; i < 9; i++) {
-                buttons[i] = new Field(this);
-                field.add(buttons[i]);
-            }
             GroupLayout layout = new GroupLayout(getContentPane());
             getContentPane().setLayout(layout);
             layout.setHorizontalGroup(
@@ -184,7 +219,7 @@ public class Layout extends JFrame {
                                                                                     .addComponent(jLabel4)
                                                                                     .addGap(18, 18, 18)
                                                                                     .addComponent(draws))
-                                                                            .addComponent(jButton10))
+                                                                            .addComponent(recPlay))
                                                                     .addGap(0, 0, Short.MAX_VALUE)))))
                                     .addContainerGap())
             );
@@ -210,7 +245,7 @@ public class Layout extends JFrame {
                                                             .addComponent(jLabel4)
                                                             .addComponent(draws))
                                                     .addGap(18, 18, 18)
-                                                    .addComponent(jButton10)
+                                                    .addComponent(recPlay)
                                                     .addGap(157, 157, 157)
                                                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                             .addComponent(jLabel8)

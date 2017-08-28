@@ -11,8 +11,8 @@ public class Field extends JButton implements ActionListener {
     static int counter = 0;
     int fieldnumber = counter;
     static TicTacToe t3 = new TicTacToe();
+    static Integer buttonNumber;
     Layout game;
-    public static boolean stopThread = false;
 
     static int p1Wins = 0;
     static int p2Wins = 0;
@@ -22,15 +22,11 @@ public class Field extends JButton implements ActionListener {
         this.game = game;
         counter++;
         this.addActionListener(this);
-        for (int i = 0; i < stones.length; i++) {
-            icons[i] = new ImageIcon("res/" + stones[i]);
-            Image image = icons[i].getImage();
-            Image newImage = image.getScaledInstance(130, 130, Image.SCALE_SMOOTH);
-            icons[i] = new ImageIcon(newImage);
-        }
-        if (counter == 8) {
-            if (Layout.gameChoose == 2 && !game.network.isYourTurn()) {
-                findPlay();
+            for (int i = 0; i < stones.length; i++) {
+                icons[i] = new ImageIcon("res/" + stones[i]);
+                Image image = icons[i].getImage();
+                Image newImage = image.getScaledInstance(130, 130, Image.SCALE_SMOOTH);
+                icons[i] = new ImageIcon(newImage);
             }
         }
 
@@ -43,10 +39,10 @@ public class Field extends JButton implements ActionListener {
             e.printStackTrace();
         }
         icon = new ImageIcon(url);*/
-    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        buttonNumber = fieldnumber;
         game.gameStone.setEnabled(false);
         TicTacToe tmp = new TicTacToe();
         switch (val) {
@@ -68,7 +64,17 @@ public class Field extends JButton implements ActionListener {
         check();
     }
         public void check() {
-            if (t3.isWin() || t3.isDraw()) gameOver();
+        if (Layout.gameChoose == 2 && game.network.isYourTurn()) {
+            //schicken
+            try {
+                game.network.dos.writeInt(fieldnumber);
+                System.out.println("ich schicke " + fieldnumber);
+                game.network.dos.flush();
+                game.network.swapTurn();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        } else if (t3.isWin() || t3.isDraw()) gameOver();
                 //--------------gegen Computer---------
             else if (Layout.gameChoose == 1) {
                 int zug = (new Algorithmen(t3).minimax()).getT3();
@@ -79,30 +85,9 @@ public class Field extends JButton implements ActionListener {
                 t3 = tmp;
                 if (t3.isWin() || t3.isDraw()) gameOver();
                 //--------------------------------------------------------------------------------------------
-            } else if (Layout.gameChoose == 2 && game.network.isYourTurn()) {
-                //schicken
-                try {
-                    game.network.dos.writeInt(fieldnumber);
-                    game.network.dos.flush();
-                    game.network.swapTurn();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                findPlay();
             }
         }
-    public void findPlay() {
-        Integer temp = null;
-        try {
-             temp = game.network.dis.readInt();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("zug " + temp);
-        game.buttons[temp].doClick();
-        game.network.swapTurn();
-        if (t3.isWin() || t3.isDraw()) gameOver();
-    }
+
     public void gameOver() {
         int nextGame;
         if(t3.isWin()){

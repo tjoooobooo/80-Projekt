@@ -11,12 +11,11 @@ public class Frame1 extends JFrame {
     public static int gameChoose;
 
     public Frame1() {
-        //-------erstes Fenster----------
         JTextField inputName = new JTextField();
         JTextField inputEnemyName = new JTextField();
         JTextField inputIP = new JTextField();
         JButton button1, button2;
-        //--------------------------------
+
         setTitle("Tic-Tac-Toe");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
@@ -46,6 +45,7 @@ public class Frame1 extends JFrame {
                 enemyName = inputEnemyName.getText().isEmpty() ? "Computer" : inputEnemyName.getText();
                 setVisible(false);
                 Frame2 secondFrame = new Frame2(frame1);
+                // TODO Fenster wird erst richtig angezeigt wenn verbindung da ist
                 //-------Netzwerk verbinden----------------
                 if (gameType.getSelectedIndex() == 2) {
                     network.setIP(inputIP.getText().isEmpty() ? "localhost" : inputIP.getText());
@@ -86,9 +86,6 @@ public class Frame1 extends JFrame {
         add(button1);
         add(button2);
         setVisible(true);
-    }
-    public int getGameType() {
-        return gameType.getSelectedIndex();
     }
 
     public static void main(String args[]) {

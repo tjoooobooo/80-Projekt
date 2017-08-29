@@ -65,7 +65,6 @@ public class Field extends JButton implements ActionListener {
     }
         public void check() {
         if (Frame1.gameChoose == 2 && Frame1.network.isYourTurn()) {
-            //schicken
             try {
                 Frame1.network.dos.writeInt(fieldnumber);
                 System.out.println("ich schicke " + fieldnumber);
@@ -90,6 +89,7 @@ public class Field extends JButton implements ActionListener {
         }
 
     public void gameOver() {
+        // TODO turn ist falsch nachdem player1 gewinnt
         int nextGame;
         if(Frame1.gameChoose == 2) Frame1.network.resetYourTurn();
         if(t3.isWin()){

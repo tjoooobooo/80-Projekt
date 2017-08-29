@@ -40,6 +40,7 @@ public class Frame2 extends JFrame {
 
         jLabel2.setText(frame1.name + " wins:");
         jLabel3.setText(frame1.enemyName + " wins:");
+        // TODO Namen online übertragen und an richtiger stelle anzeigen
         jLabel4.setText("Draws: ");
         player1Wins.setText("0");
         player2Wins.setText("0");

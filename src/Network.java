@@ -174,7 +174,9 @@ public class Network {
             e.printStackTrace();
         }
     }
-
+    public void resetYourTurn() {
+        yourTurn = false;
+    }
 
     public boolean isAccepted() {
         return accepted;

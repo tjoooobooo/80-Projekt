@@ -12,13 +12,13 @@ public class Field extends JButton implements ActionListener {
     int fieldnumber = counter;
     static TicTacToe t3 = new TicTacToe();
     static Integer buttonNumber;
-    Layout game;
+    Frame2 game;
 
     static int p1Wins = 0;
     static int p2Wins = 0;
     static int draws = 0;
 
-    public Field(Layout game) {
+    public Field(Frame2 game) {
         this.game = game;
         counter++;
         this.addActionListener(this);
@@ -64,19 +64,20 @@ public class Field extends JButton implements ActionListener {
         check();
     }
         public void check() {
-        if (Layout.gameChoose == 2 && game.network.isYourTurn()) {
+        if (Frame1.gameChoose == 2 && Frame1.network.isYourTurn()) {
             //schicken
             try {
-                game.network.dos.writeInt(fieldnumber);
+                Frame1.network.dos.writeInt(fieldnumber);
                 System.out.println("ich schicke " + fieldnumber);
-                game.network.dos.flush();
-                game.network.swapTurn();
+                Frame1.network.dos.flush();
+                Frame1.network.swapTurn();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-        } else if (t3.isWin() || t3.isDraw()) gameOver();
+        }
+        if (t3.isWin() || t3.isDraw()) gameOver();
                 //--------------gegen Computer---------
-            else if (Layout.gameChoose == 1) {
+            else if (Frame1.gameChoose == 1) {
                 int zug = (new Algorithmen(t3).minimax()).getT3();
                 TicTacToe tmp;
                 tmp = (TicTacToe) t3.makeMove(new Move(zug));
@@ -90,10 +91,11 @@ public class Field extends JButton implements ActionListener {
 
     public void gameOver() {
         int nextGame;
+        if(Frame1.gameChoose == 2) Frame1.network.resetYourTurn();
         if(t3.isWin()){
             if(val == -1) p1Wins++;
             else p2Wins++;
-            nextGame = JOptionPane.showConfirmDialog(null, (val == -1 ? game.name : game.enemyName) + " has won\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
+            nextGame = JOptionPane.showConfirmDialog(null, (val == -1 ? Frame1.name : Frame1.enemyName) + " has won\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
         } else {
             draws++;
             nextGame = JOptionPane.showConfirmDialog(null, "Game is draw\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
@@ -105,8 +107,8 @@ public class Field extends JButton implements ActionListener {
             t3 = new TicTacToe();
         } else {
             try {
-                game.network.dos.writeUTF("!userDisconnected");
-                game.network.dos.flush();
+                Frame1.network.dos.writeUTF("!userDisconnected");
+                Frame1.network.dos.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.IOException;
 
 public class Frame2 extends JFrame {
 
@@ -10,7 +13,8 @@ public class Frame2 extends JFrame {
     public JPanel countersPanel = new JPanel();
     public JPanel optionsPanel = new JPanel();
     public  JPanel field = new JPanel();
-    private JScrollPane jScrollPane1 = new JScrollPane();
+    private JScrollPane chatInputScrollPane = new JScrollPane();
+    private JScrollPane chatTextScrollPane = new JScrollPane();
     JTextPane chatInputPane = new JTextPane();
 
     JLabel jLabel1 = new JLabel();
@@ -33,13 +37,16 @@ public class Frame2 extends JFrame {
     JButton resetButton = new JButton("reset");
     JButton giveUpButton = new JButton("give up");
 
-    JLabel chatTextField = new JLabel();
+    JTextArea chatTextField = new JTextArea();
+    StringBuilder sB = new StringBuilder();
 
     Frame2(Frame1 frame1) {
         setTitle("Tic-Tac-Toe");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         //setResizable(false);
         setSize(new java.awt.Dimension(600, 600));
+        chatTextField.setEditable(false);
+        //chatTextField.setDisabledTextColor(Color.black);
         //-------wins & draws counters---------------------------------------------------------
         countersPanel.setLayout(new java.awt.GridLayout(3, 3, 15, 20));
         jLabel2.setText(frame1.name + " wins:");
@@ -59,7 +66,7 @@ public class Frame2 extends JFrame {
         optionsPanel.setLayout(new java.awt.GridLayout(4, 1, 0, 5));
         jLabel1.setText("Select Stone");
         optionsPanel.add(jLabel1);
-        String [] stoneTypes = {"X","O","Monkey","Cat", "Penguin","Crown","Smiley"};
+        String[] stoneTypes = {"X", "O", "Monkey", "Cat", "Penguin", "Crown", "Smiley"};
         gameStoneP1.setModel(new DefaultComboBoxModel<>(stoneTypes));
         gameStoneP2.setModel(new DefaultComboBoxModel<>(stoneTypes));
         gameStoneP2.setSelectedIndex(1);
@@ -75,7 +82,7 @@ public class Frame2 extends JFrame {
         background.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for(Field button : buttons){
+                for (Field button : buttons) {
                     button.setBackground(colors[background.getSelectedIndex()]);
                 }
             }
@@ -89,18 +96,19 @@ public class Frame2 extends JFrame {
         }
         //------Chat--------------------------------------
         chatTextField.setText("HI");
-        jScrollPane1.setViewportView(chatInputPane);
-
+        chatInputScrollPane.setViewportView(chatInputPane);
+        chatTextScrollPane.setViewportView(chatTextField);
         recPlay.addActionListener(evt -> {
             int num = (new Algorithmen(Field.t3).minimax()).getT3();
             Thread thread = new Thread(() -> {
                 int counter = 0;
-                while(counter++ < 4){
-                    if(buttons[num].getBackground() == Color.GREEN) buttons[num].setBackground(colors[background.getSelectedIndex()]);
+                while (counter++ < 4) {
+                    if (buttons[num].getBackground() == Color.GREEN)
+                        buttons[num].setBackground(colors[background.getSelectedIndex()]);
                     else buttons[num].setBackground(Color.GREEN);
                     try {
                         Thread.sleep(1000);
-                    } catch (InterruptedException e){
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     buttons[num].repaint();
@@ -141,7 +149,40 @@ public class Frame2 extends JFrame {
         sendChatButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //TODO send Button
+                //TODO online
+                String text = "\n" + Frame1.name + ": " + chatInputPane.getText();
+                try {
+                    Frame1.network.dos.writeUTF(text);
+                    Frame1.network.dos.flush();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                sendChatText(text);
+            }
+        });
+        chatInputPane.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                //nichts
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    String text = "\n" + Frame1.name + ": " + chatInputPane.getText();
+                    try {
+                        Frame1.network.dos.writeUTF(text);
+                        Frame1.network.dos.flush();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    sendChatText(text);
+                }
             }
         });
         //--------Layout-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -155,7 +196,7 @@ public class Frame2 extends JFrame {
                                                 .addGap(10, 10, 10)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addGroup(layout.createSequentialGroup()
-                                                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 534, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(chatInputScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 534, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(sendChatButton))
                                                         .addGroup(layout.createSequentialGroup()
@@ -172,7 +213,7 @@ public class Frame2 extends JFrame {
                                                                                 .addComponent(recPlay, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addContainerGap()
-                                                .addComponent(chatTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 561, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(chatTextScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 561, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 0, Short.MAX_VALUE))
                         .addGroup(layout.createSequentialGroup()
                                 .addGap(420, 420, 420)
@@ -198,16 +239,21 @@ public class Frame2 extends JFrame {
                                                 .addGap(24, 24, 24)
                                                 .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                                .addComponent(chatTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(chatTextScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(sendChatButton, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-                                        .addComponent(jScrollPane1))
+                                        .addComponent(chatInputScrollPane))
                                 .addContainerGap())
         );
 
         pack();
         setVisible(true);
+    }
+    public void sendChatText(String text) {
+        sB.append(text);
+        chatTextField.setText(String.valueOf(sB));
+        chatInputPane.setText("");
     }
 
     public void newGame() {

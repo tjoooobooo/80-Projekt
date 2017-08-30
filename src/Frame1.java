@@ -31,7 +31,7 @@ public class Frame1 extends JFrame {
         names.add(inputName);
         names.add(inputEnemyName);
         add(names);
-        add(new JLabel("Choose IP-Adress"));
+        add(new JLabel("Choose IP-Address"));
         add(inputIP);
         button1 = new JButton("Confirm");
         button2 = new JButton("Cancel");
@@ -55,9 +55,10 @@ public class Frame1 extends JFrame {
                     Thread thread = new Thread(() -> {
                         try {
                             while (true) {
+                                String networkText = network.dis.readUTF();
+                                if(!networkText.isEmpty()) secondFrame.sendChatText(networkText);
                                 if (network.dis.available() == 4) {
                                     Integer tmp = network.dis.readInt();
-                                    System.out.println("ich habe " + tmp + " bekommen");
                                     secondFrame.buttons[tmp].doClick();
                                     network.swapTurn();
                                 }

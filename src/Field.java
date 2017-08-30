@@ -9,7 +9,7 @@ public class Field extends JButton implements ActionListener {
     ImageIcon[] icons = new ImageIcon[stones.length];
     static int val = 1;
     static int counter = 0;
-    int fieldnumber = counter;
+    int fieldnumber = counter % 9;
     static TicTacToe t3 = new TicTacToe();
     static Integer buttonNumber;
     Frame2 game;
@@ -43,17 +43,18 @@ public class Field extends JButton implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         buttonNumber = fieldnumber;
-        game.gameStone.setEnabled(false);
+        game.gameStoneP1.setEnabled(false);
+        game.gameStoneP2.setEnabled(false);
         TicTacToe tmp = new TicTacToe();
         switch (val) {
             case 1:
                 if (t3.isWin() || t3.isDraw()) break;
-                setIcon(icons[game.gameStone.getSelectedIndex()]);
+                setIcon(icons[game.gameStoneP1.getSelectedIndex()]);
                 tmp = (TicTacToe) t3.makeMove(new Move(fieldnumber));
                 break;
             case -1:
                 if (t3.isWin() || t3.isDraw()) break;
-                setIcon(icons[1]);
+                setIcon(icons[game.gameStoneP2.getSelectedIndex()]);
                 tmp = (TicTacToe) t3.makeMove(new Move(fieldnumber));
                 break;
             default:
@@ -74,25 +75,25 @@ public class Field extends JButton implements ActionListener {
                 e1.printStackTrace();
             }
         }
-        if (t3.isWin() || t3.isDraw()) gameOver();
+        if (t3.isWin() || t3.isDraw()) gameOver(false);
                 //--------------gegen Computer---------
             else if (Frame1.gameChoose == 1) {
                 int zug = (new Algorithmen(t3).minimax()).getT3();
                 TicTacToe tmp;
                 tmp = (TicTacToe) t3.makeMove(new Move(zug));
-                game.buttons[zug].setIcon(val == 1 ? icons[game.gameStone.getSelectedIndex()] : icons[1]);
+                game.buttons[zug].setIcon(val == 1 ? icons[game.gameStoneP1.getSelectedIndex()] : icons[game.gameStoneP2.getSelectedIndex()]);
                 val = -val;
                 t3 = tmp;
-                if (t3.isWin() || t3.isDraw()) gameOver();
+                if (t3.isWin() || t3.isDraw()) gameOver(false);
                 //--------------------------------------------------------------------------------------------
             }
         }
 
-    public void gameOver() {
-        // TODO turn ist falsch nachdem player1 gewinnt
+    public void gameOver(boolean giveUp) {
+        // TODO turn ist falsch nachdem player1 gewinnt online
         int nextGame;
         if(Frame1.gameChoose == 2) Frame1.network.resetYourTurn();
-        if(t3.isWin()){
+        if(t3.isWin() || giveUp){
             if(val == -1) p1Wins++;
             else p2Wins++;
             nextGame = JOptionPane.showConfirmDialog(null, (val == -1 ? Frame1.name : Frame1.enemyName) + " has won\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
@@ -114,6 +115,9 @@ public class Field extends JButton implements ActionListener {
             }
             System.exit(0);
         }
+        updateCounters();
+    }
+    public void updateCounters() {
         game.player1Wins.setText(String.valueOf(p1Wins));
         game.player2Wins.setText(String.valueOf(p2Wins));
         game.draws.setText(String.valueOf(draws));

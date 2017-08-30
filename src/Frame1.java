@@ -10,6 +10,10 @@ public class Frame1 extends JFrame {
     static String enemyName;
     public static int gameChoose;
 
+    public static void main(String args[]) {
+        new Frame1();
+    }
+
     public Frame1() {
         JTextField inputName = new JTextField();
         JTextField inputEnemyName = new JTextField();
@@ -44,23 +48,34 @@ public class Frame1 extends JFrame {
                 name = inputName.getText().isEmpty() ? "Player1" : inputName.getText();
                 enemyName = inputEnemyName.getText().isEmpty() ? "Computer" : inputEnemyName.getText();
                 setVisible(false);
-                Frame2 secondFrame = new Frame2(frame1);
                 // TODO Fenster wird erst richtig angezeigt wenn verbindung da ist
-                //-------Netzwerk verbinden----------------
+                //-------Netzwerk verbinden---------------------------------------------------------------
                 if (gameType.getSelectedIndex() == 2) {
                     network.setIP(inputIP.getText().isEmpty() ? "localhost" : inputIP.getText());
                     while (!network.isAccepted() && network.getisServer()) {
                         network.listenForServerRequest();
                     }
+                    try {
+                        network.dos.writeUTF(name);
+                        enemyName = network.dis.readUTF();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    Frame2 secondFrame = new Frame2(frame1);
                     Thread thread = new Thread(() -> {
                         try {
                             while (true) {
-                                String networkText = network.dis.readUTF();
-                                if(!networkText.isEmpty()) secondFrame.sendChatText(networkText);
                                 if (network.dis.available() == 4) {
                                     Integer tmp = network.dis.readInt();
                                     secondFrame.buttons[tmp].doClick();
                                     network.swapTurn();
+                                } else if(network.dis.available() > 4) {
+                                    String networkText = network.dis.readUTF();
+                                    if(networkText.equals("!IGIVEUP")) secondFrame.buttons[0].gameOver(true);
+                                    else {
+                                        secondFrame.sendChatText(networkText);
+                                        secondFrame.chatTextField.setCaretPosition(secondFrame.chatTextField.getText().length());
+                                    }
                                 }
                             }
                         } catch (IOException e1) {
@@ -75,7 +90,7 @@ public class Frame1 extends JFrame {
                     thread.setPriority(1);
                     thread.start();
                 }
-                //-----------------------------------------
+                //--------------------------------------------------------------------------------------
             }
         });
         button2.addActionListener(new ActionListener() {
@@ -88,8 +103,13 @@ public class Frame1 extends JFrame {
         add(button2);
         setVisible(true);
     }
-
-    public static void main(String args[]) {
-        new Frame1();
+    private static boolean isInteger(String string) {
+        try {
+            Integer.valueOf(string);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
+
 }

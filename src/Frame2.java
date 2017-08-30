@@ -123,6 +123,11 @@ public class Frame2 extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 //TODO online muss richtig bestimmt werden wer aufgibt
                 buttons[0].gameOver(true);
+                try {
+                    frame1.network.dos.writeUTF("!IGIVEUP");
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
         resetButton.addActionListener(new ActionListener() {

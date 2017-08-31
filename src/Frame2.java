@@ -155,14 +155,7 @@ public class Frame2 extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //TODO online
-                String text = "\n" + Frame1.name + ": " + chatInputPane.getText();
-                try {
-                    Frame1.network.dos.writeUTF(text);
-                    Frame1.network.dos.flush();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                sendChatText(text);
+                sendChatText();
             }
         });
         chatInputPane.addKeyListener(new KeyListener() {
@@ -173,20 +166,15 @@ public class Frame2 extends JFrame {
 
             @Override
             public void keyPressed(KeyEvent e) {
-
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    sendChatText();
+                }
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    String text = "\n" + Frame1.name + ": " + chatInputPane.getText();
-                    try {
-                        Frame1.network.dos.writeUTF(text);
-                        Frame1.network.dos.flush();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    sendChatText(text);
+                    chatInputPane.setText("");
                 }
             }
         });
@@ -259,8 +247,20 @@ public class Frame2 extends JFrame {
             sendChatButton.setVisible(false);
         }
     }
-    public void sendChatText(String text) {
-        sB.append(text);
+    public void sendChatText() {
+        String text = chatInputPane.getText();
+        if(text.isEmpty() || text.equals("\n")) return;
+        String message = Frame1.name + ": " + text;
+        try {
+            Frame1.network.dos.writeUTF(message);
+            Frame1.network.dos.flush();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        addChatText(message);
+    }
+    public void addChatText(String s) {
+        sB.append(s + "\n");
         chatTextField.setText(String.valueOf(sB));
         chatInputPane.setText("");
     }

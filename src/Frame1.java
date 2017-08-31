@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.Objects;
 
 public class Frame1 extends JFrame {
     static Network network = new Network();
@@ -70,10 +71,30 @@ public class Frame1 extends JFrame {
                                     secondFrame.buttons[tmp].doClick();
                                     network.swapTurn();
                                 } else if(network.dis.available() > 4) {
-                                    String networkText = network.dis.readUTF();
-                                    if(networkText.equals("!IGIVEUP")) secondFrame.buttons[0].gameOver(true);
-                                    else {
-                                        secondFrame.sendChatText(networkText);
+                                    String s = network.dis.readUTF();
+                                    if ((s.replace(name, "")).replace(enemyName, "").substring(2,3).equals("!")) {
+                                        s = s.replace(name, "").replace(enemyName, "");
+                                        s = s.substring(2,s.length());
+                                        System.out.println(s);
+                                        switch (s) {
+                                            case "!kick":
+                                                System.out.println("Du wurdest aus der Sitzung geworfen!");
+                                                break;
+                                            case "!userDisconnected":
+                                                if (network.getisServer()) {
+                                                    System.out.println("Der Client hat die Verbindung getrennt!");
+                                                } else {
+                                                    System.out.println("Der Server hat die Verbindung getrennt!");
+                                                }
+                                                break;
+                                            case "!GiveUP":
+                                                //TODO giveUp online
+                                            default:
+                                                System.out.println("Unbekannter Befehl!");
+                                                break;
+                                        }
+                                    } else {
+                                        secondFrame.addChatText(s);
                                         secondFrame.chatTextField.setCaretPosition(secondFrame.chatTextField.getText().length());
                                     }
                                 }

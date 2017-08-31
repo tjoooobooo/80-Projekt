@@ -68,7 +68,6 @@ public class Field extends JButton implements ActionListener {
         if (Frame1.gameChoose == 2 && Frame1.network.isYourTurn()) {
             try {
                 Frame1.network.dos.writeInt(fieldnumber);
-                System.out.println("ich schicke " + fieldnumber);
                 Frame1.network.dos.flush();
                 Frame1.network.swapTurn();
             } catch (IOException e1) {

@@ -44,7 +44,8 @@ public class Frame2 extends JFrame {
         setTitle("Tic-Tac-Toe");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         //setResizable(false);
-        setSize(new java.awt.Dimension(600, 600));
+        if(Frame1.gameChoose == 2 ) setSize(new Dimension(600, 600));
+        else setPreferredSize(new Dimension(650, 480));
         chatTextField.setEditable(false);
         //chatTextField.setDisabledTextColor(Color.black);
         //-------wins & draws counters---------------------------------------------------------
@@ -95,7 +96,6 @@ public class Frame2 extends JFrame {
             field.add(buttons[i]);
         }
         //------Chat--------------------------------------
-        chatTextField.setText("HI");
         chatInputScrollPane.setViewportView(chatInputPane);
         chatTextScrollPane.setViewportView(chatTextField);
         recPlay.addActionListener(evt -> {
@@ -251,9 +251,13 @@ public class Frame2 extends JFrame {
                                         .addComponent(chatInputScrollPane))
                                 .addContainerGap())
         );
-
         pack();
         setVisible(true);
+        if(Frame1.gameChoose != 2) {
+            chatInputScrollPane.setVisible(false);
+            chatTextScrollPane.setVisible(false);
+            sendChatButton.setVisible(false);
+        }
     }
     public void sendChatText(String text) {
         sB.append(text);

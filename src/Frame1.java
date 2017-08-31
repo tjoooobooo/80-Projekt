@@ -89,7 +89,7 @@ public class Frame1 extends JFrame {
                     });
                     thread.setPriority(1);
                     thread.start();
-                }
+                } else new Frame2(frame1);
                 //--------------------------------------------------------------------------------------
             }
         });
@@ -103,13 +103,4 @@ public class Frame1 extends JFrame {
         add(button2);
         setVisible(true);
     }
-    private static boolean isInteger(String string) {
-        try {
-            Integer.valueOf(string);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
 }

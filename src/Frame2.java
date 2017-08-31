@@ -380,7 +380,7 @@ public class Frame2 extends JFrame {
         } else {
             player1Wins.setText(String.valueOf(p1WinsCounter));
             player2Wins.setText(String.valueOf(p2WinsCounter));
-            draws.setText(String.valueOf(drawsCounter));
         }
+        draws.setText(String.valueOf(drawsCounter));
     }
 }

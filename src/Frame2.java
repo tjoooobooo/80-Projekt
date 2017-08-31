@@ -152,9 +152,9 @@ public class Frame2 extends JFrame {
                 if (firstFrame.gameChoose == 2 && serverActive) {
                     sendChatText("!leave");
                     serverActive = false;
+                    firstFrame = new Frame1();
+                    firstFrame.network = new Network();
                 }
-                firstFrame = new Frame1();
-                firstFrame.network = new Network();
             }
         });
 
@@ -252,6 +252,15 @@ public class Frame2 extends JFrame {
             chatInputScrollPane.setVisible(false);
             chatTextScrollPane.setVisible(false);
             sendChatButton.setVisible(false);
+        } else updateButtons(firstFrame.network.isYourTurn());
+    }
+    public void updateButtons(boolean update){
+        for(Field button : buttons) {
+            if (update) {
+                button.setEnabled(true);
+            } else {
+                button.setEnabled(false);
+            }
         }
     }
 
@@ -318,7 +327,7 @@ public class Frame2 extends JFrame {
             }
         }
         if (Field.t3.isWin() || Field.t3.isDraw()) gameOver(false);
-            //--------------gegen Computer---------
+        //--------------gegen Computer---------
         else if (Frame1.gameChoose == 1) {
             int zug = (new Algorithmen(Field.t3).minimax()).getT3();
             TicTacToe tmp;
@@ -327,8 +336,8 @@ public class Frame2 extends JFrame {
             Field.val = -Field.val;
             Field.t3 = tmp;
             if (Field.t3.isWin() || Field.t3.isDraw()) gameOver(false);
-            //--------------------------------------------------------------------------------------------
         }
+        //--------------------------------------------------------------------------------------------
     }
 
     public void gameOver(boolean giveUp) {

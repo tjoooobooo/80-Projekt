@@ -58,6 +58,7 @@ public class Field extends JButton implements ActionListener {
         }
         val = -val;
         t3 = tmp;
+        secondFrame.updateButtons(!secondFrame.firstFrame.network.isYourTurn());
         secondFrame.check(fieldnumber);
     }
 

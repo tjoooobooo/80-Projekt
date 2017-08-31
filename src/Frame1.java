@@ -69,6 +69,7 @@ public class Frame1 extends JFrame {
                             while (secondFrame.serverActive) {
                                 if (network.dis.available() == 4) {
                                     Integer tmp = network.dis.readInt();
+                                    secondFrame.updateButtons(true);
                                     secondFrame.buttons[tmp].doClick();
                                     network.swapTurn();
                                 } else if(network.dis.available() > 4) {

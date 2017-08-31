@@ -345,15 +345,20 @@ public class Frame2 extends JFrame {
         int nextGame;
         if(Frame1.gameChoose == 2) firstFrame.network.resetYourTurn();
         if(Field.t3.isWin() || giveUp){
-            if(Field.val == -1) p1WinsCounter++;
+            if(Field.val == -1) {
+                p1WinsCounter++;
+            }
             else p2WinsCounter++;
-            nextGame = JOptionPane.showConfirmDialog(null, (Field.val == -1 ? Frame1.name : Frame1.enemyName) + " has won\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
+            if(firstFrame.network.getisServer())
+                nextGame = JOptionPane.showConfirmDialog(null, (Field.val == -1 ? Frame1.name : Frame1.enemyName) + " has won\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
+            else
+                nextGame = JOptionPane.showConfirmDialog(null, (Field.val == 1 ? Frame1.name : Frame1.enemyName) + " has won\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
         } else {
             drawsCounter++;
             nextGame = JOptionPane.showConfirmDialog(null, "Game is draw\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
         }
         if(nextGame == 0) {
-            Field.val = 1;
+            //Field.val = 1;
             Field.counter = 0;
             newGame();
             Field.t3 = new TicTacToe();
@@ -369,8 +374,13 @@ public class Frame2 extends JFrame {
         updateCounters();
     }
     public void updateCounters() {
-        player1Wins.setText(String.valueOf(p1WinsCounter));
-        player2Wins.setText(String.valueOf(p2WinsCounter));
-        draws.setText(String.valueOf(drawsCounter));
+        if(!firstFrame.network.getisServer()) {
+            player1Wins.setText(String.valueOf(p2WinsCounter));
+            player2Wins.setText(String.valueOf(p1WinsCounter));
+        } else {
+            player1Wins.setText(String.valueOf(p1WinsCounter));
+            player2Wins.setText(String.valueOf(p2WinsCounter));
+            draws.setText(String.valueOf(drawsCounter));
+        }
     }
 }

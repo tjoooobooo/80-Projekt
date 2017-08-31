@@ -267,7 +267,6 @@ public class Frame2 extends JFrame {
     public void sendChatText(String text) {
         text = text.isEmpty() ? chatInputPane.getText() : text;
         if (text.isEmpty() || text.equals("\n")) return;
-        //if (text.substring(0,1).equals("!")) processingCommands(text, 1);
         String message = firstFrame.name + ": " + text;
         try {
             firstFrame.network.dos.writeUTF(message);
@@ -275,7 +274,7 @@ public class Frame2 extends JFrame {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        addChatText(message);
+        if (!text.substring(0,1).equals("!")) addChatText(message);
     }
 
     public void addChatText(String s) {

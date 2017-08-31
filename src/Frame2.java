@@ -358,7 +358,7 @@ public class Frame2 extends JFrame {
             nextGame = JOptionPane.showConfirmDialog(null, "Game is draw\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
         }
         if(nextGame == 0) {
-            //Field.val = 1;
+            if(firstFrame.gameChoose != 2) Field.val = 1;
             Field.counter = 0;
             newGame();
             Field.t3 = new TicTacToe();

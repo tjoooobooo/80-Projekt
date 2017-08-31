@@ -327,7 +327,7 @@ public class Frame2 extends JFrame {
             }
         }
         if (Field.t3.isWin() || Field.t3.isDraw()) gameOver(false);
-        //--------------gegen Computer---------
+        //--------------gegen Computer-----------------------------------------------------
         else if (Frame1.gameChoose == 1) {
             int zug = (new Algorithmen(Field.t3).minimax()).getT3();
             TicTacToe tmp;

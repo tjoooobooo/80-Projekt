@@ -343,7 +343,6 @@ public class Frame2 extends JFrame {
     public void gameOver(boolean giveUp) {
         // TODO turn ist falsch nachdem player1 gewinnt online
         int nextGame;
-        if(Frame1.gameChoose == 2) firstFrame.network.resetYourTurn();
         if(Field.t3.isWin() || giveUp){
             if(Field.val == -1) {
                 p1WinsCounter++;

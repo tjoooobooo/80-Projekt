@@ -94,7 +94,8 @@ public class Frame1 extends JFrame {
                                             case "!iGiveUp":
                                                 //TODO giveUp online
                                                 JOptionPane.showMessageDialog(null,enemyName + " gave up", "YOU WON",JOptionPane.OK_OPTION);
-                                                secondFrame.giveUpButton.doClick();
+                                                secondFrame.gameOver(true);
+                                                break;
                                             default:
                                                 System.out.println("Unbekannter Befehl!");
                                                 break;

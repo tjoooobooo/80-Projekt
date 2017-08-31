@@ -17,18 +17,12 @@ public class Network {
     public Socket socket;
     public DataOutputStream dos;
     public DataInputStream dis;
-    private ServerSocket serverSocket;
+     ServerSocket serverSocket;
 
     private boolean accepted = false;
     private boolean yourTurn;
     private boolean isServer = true;
 
-
-    public Network() {
-        //System.out.println("Bitte gib deinen Spielernamen ein: ");
-        //name = scanner.nextLine();
-        //if (!connect()) initializeServer();
-    }
 
     public void setIP(String ip){
         this.ip = ip;
@@ -56,7 +50,7 @@ public class Network {
             switch (s) {
                 case "!kick":
                     if (getisServer()) {//kick ist server only, deswegen passiert als client nichts
-                        disconnectPlayerFromServer(1);
+                        disconnectPlayerFromServer();
                     } else {
                         System.out.println("Du wurdest aus der Sitzung geworfen!");
                     }
@@ -96,7 +90,7 @@ public class Network {
             switch (s) {
                 case "!kick"://Wenn der Client exit drückt, bekommt der Server einen !clientDisconnected
                     if (getisServer()) {//kick ist server only, deswegen passiert als client nichts
-                        disconnectPlayerFromServer(1);
+                        disconnectPlayerFromServer();
                     } else {
                         System.out.println("Du wurdest aus der Sitzung geworfen!");
                     }
@@ -156,20 +150,9 @@ public class Network {
         yourTurn = true;
     }
 
-    public void disconnectPlayerFromServer(int i) {//Was soll passieren wenn der Gegner disconnected? automatisch nach neuem suchen? neues spiel? startbildschirm?
+    public void disconnectPlayerFromServer() {//Was soll passieren wenn der Gegner disconnected? automatisch nach neuem suchen? neues spiel? startbildschirm?
         try {
             serverSocket.close();
-            switch (i) {
-                case 1:
-                    System.out.println("Spieler wurde gekickt!");
-                    break;
-                case 2:
-                    System.out.println("Der Gegner hat die Verbindung getrennt!");
-                    break;
-            }
-            initializeServer();
-            System.out.println("Warte auf neuen Spieler... ");
-            listenForServerRequest();
         } catch (IOException e) {
             e.printStackTrace();
         }

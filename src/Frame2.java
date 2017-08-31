@@ -12,7 +12,7 @@ public class Frame2 extends JFrame {
 
     public JPanel countersPanel = new JPanel();
     public JPanel optionsPanel = new JPanel();
-    public  JPanel field = new JPanel();
+    public JPanel field = new JPanel();
     private JScrollPane chatInputScrollPane = new JScrollPane();
     private JScrollPane chatTextScrollPane = new JScrollPane();
     JTextPane chatInputPane = new JTextPane();
@@ -39,15 +39,21 @@ public class Frame2 extends JFrame {
 
     JTextArea chatTextField = new JTextArea();
     StringBuilder sB = new StringBuilder();
+    Frame1 firstFrame;
+    boolean serverActive = true;
+
+    static int p1WinsCounter = 0;
+    static int p2WinsCounter = 0;
+    static int drawsCounter = 0;
 
     Frame2(Frame1 frame1) {
         setTitle("Tic-Tac-Toe");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        //setResizable(false);
-        if(Frame1.gameChoose == 2 ) setSize(new Dimension(600, 600));
+        setResizable(false);
+        if (frame1.gameChoose == 2) setSize(new Dimension(600, 600));
         else setPreferredSize(new Dimension(650, 480));
         chatTextField.setEditable(false);
-        //chatTextField.setDisabledTextColor(Color.black);
+        firstFrame = frame1;
         //-------wins & draws counters---------------------------------------------------------
         countersPanel.setLayout(new java.awt.GridLayout(3, 3, 15, 20));
         jLabel2.setText(frame1.name + " wins:");
@@ -122,19 +128,15 @@ public class Frame2 extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //TODO online muss richtig bestimmt werden wer aufgibt
-                buttons[0].gameOver(true);
-                try {
-                    frame1.network.dos.writeUTF("!IGIVEUP");
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+                gameOver(true);
+                if(firstFrame.gameChoose == 2) sendChatText("!iGiveUp");
             }
         });
         resetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Field.p1Wins = Field.p2Wins = Field.draws = 0;
-                buttons[0].updateCounters();
+                p1WinsCounter = p2WinsCounter = drawsCounter = 0;
+                updateCounters();
                 Field.t3 = new TicTacToe();
                 gameStoneP1.setSelectedIndex(0);
                 gameStoneP2.setSelectedIndex(1);
@@ -147,7 +149,12 @@ public class Frame2 extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Field.t3 = new TicTacToe();
                 setVisible(false);
-                new Frame1();
+                if (firstFrame.gameChoose == 2 && serverActive) {
+                    sendChatText("!leave");
+                    serverActive = false;
+                }
+                firstFrame = new Frame1();
+                firstFrame.network = new Network();
             }
         });
 
@@ -155,7 +162,7 @@ public class Frame2 extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //TODO online
-                sendChatText();
+                sendChatText("");
             }
         });
         chatInputPane.addKeyListener(new KeyListener() {
@@ -167,7 +174,7 @@ public class Frame2 extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    sendChatText();
+                    sendChatText("");
                 }
             }
 
@@ -241,28 +248,55 @@ public class Frame2 extends JFrame {
         );
         pack();
         setVisible(true);
-        if(Frame1.gameChoose != 2) {
+        if (firstFrame.gameChoose != 2) {
             chatInputScrollPane.setVisible(false);
             chatTextScrollPane.setVisible(false);
             sendChatButton.setVisible(false);
         }
     }
-    public void sendChatText() {
-        String text = chatInputPane.getText();
-        if(text.isEmpty() || text.equals("\n")) return;
-        String message = Frame1.name + ": " + text;
+
+    public void sendChatText(String text) {
+        text = text.isEmpty() ? chatInputPane.getText() : text;
+        if (text.isEmpty() || text.equals("\n")) return;
+        //if (text.substring(0,1).equals("!")) processingCommands(text, 1);
+        String message = firstFrame.name + ": " + text;
         try {
-            Frame1.network.dos.writeUTF(message);
-            Frame1.network.dos.flush();
+            firstFrame.network.dos.writeUTF(message);
+            firstFrame.network.dos.flush();
         } catch (IOException e1) {
             e1.printStackTrace();
         }
         addChatText(message);
     }
+
     public void addChatText(String s) {
         sB.append(s + "\n");
         chatTextField.setText(String.valueOf(sB));
         chatInputPane.setText("");
+    }
+
+    public void processingCommands(String command, int player) {
+        switch (command) {
+            case "!kick":
+                System.out.println("Du wurdest aus der Sitzung geworfen!");
+                break;
+            case "!leave":
+                int disconnected;
+                if (firstFrame.network.getisServer()) {
+                    disconnected = JOptionPane.showConfirmDialog(null, "Client has left game\nback to game options?", "Client disconnected", JOptionPane.OK_CANCEL_OPTION);
+                } else {
+                    disconnected = JOptionPane.showConfirmDialog(null, "Server has left game\nback to game options?", "Server disconnected", JOptionPane.OK_CANCEL_OPTION);
+                }
+                if (disconnected == 0) optionsButton.doClick();
+                else System.exit(0);
+                break;
+            case "!iGiveUp":
+                //TODO giveUp online
+                JOptionPane.showMessageDialog(null,firstFrame.enemyName + " gave up", "YOU WON",JOptionPane.OK_OPTION);
+            default:
+                System.out.println("Unbekannter Befehl!");
+                break;
+        }
     }
 
     public void newGame() {
@@ -271,5 +305,63 @@ public class Frame2 extends JFrame {
         gameStoneP2.setEnabled(true);
         for (int i = 0; i < 9; i++) buttons[i].setIcon(null);
         //new Layout();
+    }
+    //------------------------------------------------------------------------------------------------------------------------------------------
+    public void check(int fieldnumber) {
+        if (Frame1.gameChoose == 2 && firstFrame.network.isYourTurn()) {
+            try {
+                firstFrame.network.dos.writeInt(fieldnumber);
+                firstFrame.network.dos.flush();
+                firstFrame.network.swapTurn();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        if (Field.t3.isWin() || Field.t3.isDraw()) gameOver(false);
+            //--------------gegen Computer---------
+        else if (Frame1.gameChoose == 1) {
+            int zug = (new Algorithmen(Field.t3).minimax()).getT3();
+            TicTacToe tmp;
+            tmp = (TicTacToe) Field.t3.makeMove(new Move(zug));
+            buttons[zug].setIcon(Field.val == 1 ? Field.icons[gameStoneP1.getSelectedIndex()] : Field.icons[gameStoneP2.getSelectedIndex()]);
+            Field.val = -Field.val;
+            Field.t3 = tmp;
+            if (Field.t3.isWin() || Field.t3.isDraw()) gameOver(false);
+            //--------------------------------------------------------------------------------------------
+        }
+    }
+
+    public void gameOver(boolean giveUp) {
+        // TODO turn ist falsch nachdem player1 gewinnt online
+        int nextGame;
+        if(Frame1.gameChoose == 2) firstFrame.network.resetYourTurn();
+        if(Field.t3.isWin() || giveUp){
+            if(Field.val == -1) p1WinsCounter++;
+            else p2WinsCounter++;
+            nextGame = JOptionPane.showConfirmDialog(null, (Field.val == -1 ? Frame1.name : Frame1.enemyName) + " has won\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
+        } else {
+            drawsCounter++;
+            nextGame = JOptionPane.showConfirmDialog(null, "Game is draw\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
+        }
+        if(nextGame == 0) {
+            Field.val = 1;
+            Field.counter = 0;
+            newGame();
+            Field.t3 = new TicTacToe();
+        } else {
+            try {
+                firstFrame.network.dos.writeUTF("!userDisconnected");
+                firstFrame.network.dos.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.exit(0);
+        }
+        updateCounters();
+    }
+    public void updateCounters() {
+        player1Wins.setText(String.valueOf(p1WinsCounter));
+        player2Wins.setText(String.valueOf(p2WinsCounter));
+        draws.setText(String.valueOf(drawsCounter));
     }
 }

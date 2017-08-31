@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Frame1 extends JFrame {
-    static Network network = new Network();
+    Network network = new Network();
     public JComboBox gameType;
     static String name;
     static String enemyName;
@@ -49,6 +49,7 @@ public class Frame1 extends JFrame {
                 name = inputName.getText().isEmpty() ? "Player1" : inputName.getText();
                 enemyName = inputEnemyName.getText().isEmpty() ? "Computer" : inputEnemyName.getText();
                 setVisible(false);
+                Frame2 secondFrame;
                 // TODO Fenster wird erst richtig angezeigt wenn verbindung da ist
                 //-------Netzwerk verbinden---------------------------------------------------------------
                 if (gameType.getSelectedIndex() == 2) {
@@ -62,10 +63,10 @@ public class Frame1 extends JFrame {
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
-                    Frame2 secondFrame = new Frame2(frame1);
+                    secondFrame = new Frame2(frame1);
                     Thread thread = new Thread(() -> {
                         try {
-                            while (true) {
+                            while (secondFrame.serverActive) {
                                 if (network.dis.available() == 4) {
                                     Integer tmp = network.dis.readInt();
                                     secondFrame.buttons[tmp].doClick();
@@ -75,20 +76,24 @@ public class Frame1 extends JFrame {
                                     if ((s.replace(name, "")).replace(enemyName, "").substring(2,3).equals("!")) {
                                         s = s.replace(name, "").replace(enemyName, "");
                                         s = s.substring(2,s.length());
-                                        System.out.println(s);
                                         switch (s) {
                                             case "!kick":
                                                 System.out.println("Du wurdest aus der Sitzung geworfen!");
                                                 break;
-                                            case "!userDisconnected":
+                                            case "!leave":
+                                                int disconnected;
                                                 if (network.getisServer()) {
-                                                    System.out.println("Der Client hat die Verbindung getrennt!");
+                                                    disconnected = JOptionPane.showConfirmDialog(null, "Client has left game\nback to game options?", "Client disconnected", JOptionPane.OK_CANCEL_OPTION);
                                                 } else {
-                                                    System.out.println("Der Server hat die Verbindung getrennt!");
+                                                    disconnected = JOptionPane.showConfirmDialog(null, "Server has left game\nback to game options?", "Server disconnected", JOptionPane.OK_CANCEL_OPTION);
                                                 }
+                                                if (disconnected == 0) secondFrame.optionsButton.doClick();
+                                                else System.exit(0);
                                                 break;
-                                            case "!GiveUP":
+                                            case "!iGiveUp":
                                                 //TODO giveUp online
+                                                JOptionPane.showMessageDialog(null,enemyName + " gave up", "YOU WON",JOptionPane.OK_OPTION);
+                                                secondFrame.giveUpButton.doClick();
                                             default:
                                                 System.out.println("Unbekannter Befehl!");
                                                 break;
@@ -110,7 +115,7 @@ public class Frame1 extends JFrame {
                     });
                     thread.setPriority(1);
                     thread.start();
-                } else new Frame2(frame1);
+                } else secondFrame = new Frame2(frame1);
                 //--------------------------------------------------------------------------------------
             }
         });

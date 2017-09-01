@@ -49,6 +49,7 @@ public class Frame2 extends JFrame {
     Frame2(Frame1 frame1) {
         setTitle("Tic-Tac-Toe");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        // TODO spieler geht aus Server wenn er schließt
         setResizable(false);
         if (frame1.gameChoose == 2) setSize(new Dimension(600, 600));
         else setPreferredSize(new Dimension(650, 480));
@@ -258,8 +259,8 @@ public class Frame2 extends JFrame {
         text = text.isEmpty() ? chatInputPane.getText() : text;
         if (text.isEmpty() || text.equals("\n")) return;
         //command or message
-        if(text.substring(0,1).equals("!")) processingCommands(text);
-        else text = firstFrame.name + ": " + text;
+        //if(text.substring(0,1).equals("!")) processingCommands(text);
+        text = firstFrame.name + ": " + text;
         try {
             firstFrame.network.dos.writeUTF(text);
             firstFrame.network.dos.flush();
@@ -299,7 +300,8 @@ public class Frame2 extends JFrame {
                 break;
             case "!iGiveUp":
                 //TODO giveUp online
-                JOptionPane.showMessageDialog(null,firstFrame.enemyName + " gave up", "YOU WON",JOptionPane.OK_OPTION);
+                //JOptionPane.showMessageDialog(null,firstFrame.enemyName + " gave up", "YOU WON",JOptionPane.OK_OPTION);
+                break;
             default:
                 System.out.println("Unbekannter Befehl!");
                 break;

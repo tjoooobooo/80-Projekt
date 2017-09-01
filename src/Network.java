@@ -153,6 +153,8 @@ public class Network {
     public void disconnectPlayerFromServer() {//Was soll passieren wenn der Gegner disconnected? automatisch nach neuem suchen? neues spiel? startbildschirm?
         try {
             serverSocket.close();
+            initializeServer();
+            listenForServerRequest();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -175,5 +177,15 @@ public class Network {
 
     public boolean getisServer() {
         return isServer;
+    }
+
+    public void closeServer() {
+        accepted = false;
+        if(isServer) try {
+            serverSocket.close();
+            if(socket != null) socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -124,46 +124,34 @@ public class Frame2 extends JFrame {
             thread.start();
         });
         //-----Buttons----------------------------------------------
-        giveUpButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //TODO online muss richtig bestimmt werden wer aufgibt
-                gameOver(true);
-                if(firstFrame.gameChoose == 2) sendChatText("!iGiveUp");
-            }
+        giveUpButton.addActionListener(e -> {
+            //TODO online muss richtig bestimmt werden wer aufgibt
+            gameOver(true);
+            if(firstFrame.gameChoose == 2) sendChatText("!iGiveUp");
         });
-        resetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                p1WinsCounter = p2WinsCounter = drawsCounter = 0;
-                updateCounters();
-                Field.t3 = new TicTacToe();
-                gameStoneP1.setSelectedIndex(0);
-                gameStoneP2.setSelectedIndex(1);
-                background.setSelectedIndex(0);
-                newGame();
-            }
+        resetButton.addActionListener(e -> {
+            p1WinsCounter = p2WinsCounter = drawsCounter = 0;
+            updateCounters();
+            Field.t3 = new TicTacToe();
+            gameStoneP1.setSelectedIndex(0);
+            gameStoneP2.setSelectedIndex(1);
+            background.setSelectedIndex(0);
+            newGame();
         });
-        optionsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Field.t3 = new TicTacToe();
-                setVisible(false);
-                if (firstFrame.gameChoose == 2 && serverActive) {
-                    sendChatText("!leave");
-                    serverActive = false;
-                    firstFrame = new Frame1();
-                    firstFrame.network = new Network();
-                }
+        optionsButton.addActionListener(e -> {
+            Field.t3 = new TicTacToe();
+            setVisible(false);
+            if (firstFrame.gameChoose == 2 && serverActive) {
+                sendChatText("!leave");
+                firstFrame.network.closeServer();
+                serverActive = false;
+                firstFrame = new Frame1();
             }
         });
 
-        sendChatButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //TODO online
-                sendChatText("");
-            }
+        sendChatButton.addActionListener(e -> {
+            //TODO online
+            sendChatText("");
         });
         chatInputPane.addKeyListener(new KeyListener() {
             @Override
@@ -258,8 +246,10 @@ public class Frame2 extends JFrame {
         for(Field button : buttons) {
             if (update) {
                 button.setEnabled(true);
+                giveUpButton.setEnabled(true);
             } else {
                 button.setEnabled(false);
+                giveUpButton.setEnabled(false);
             }
         }
     }
@@ -267,14 +257,16 @@ public class Frame2 extends JFrame {
     public void sendChatText(String text) {
         text = text.isEmpty() ? chatInputPane.getText() : text;
         if (text.isEmpty() || text.equals("\n")) return;
-        String message = firstFrame.name + ": " + text;
+        //command or message
+        if(text.substring(0,1).equals("!")) processingCommands(text);
+        else text = firstFrame.name + ": " + text;
         try {
-            firstFrame.network.dos.writeUTF(message);
+            firstFrame.network.dos.writeUTF(text);
             firstFrame.network.dos.flush();
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        if (!text.substring(0,1).equals("!")) addChatText(message);
+        if (!text.substring(0,1).equals("!")) addChatText(text);
     }
 
     public void addChatText(String s) {
@@ -283,10 +275,17 @@ public class Frame2 extends JFrame {
         chatInputPane.setText("");
     }
 
-    public void processingCommands(String command, int player) {
+    public void processingCommands(String command) {
         switch (command) {
             case "!kick":
-                System.out.println("Du wurdest aus der Sitzung geworfen!");
+                if(firstFrame.network.getisServer()) {
+                    int kicked;
+                    System.out.println("Du wurdest aus der Sitzung geworfen!");
+                    kicked = JOptionPane.showConfirmDialog(null, "Server has kicked you\nback to game options?", "You have been kicked", JOptionPane.OK_CANCEL_OPTION);
+                    firstFrame.network.disconnectPlayerFromServer();
+                    if (kicked == 0) optionsButton.doClick();
+                    else System.exit(0);
+                } else JOptionPane.showMessageDialog(null, "Only the server has permission to kick players", "Invalid command", JOptionPane.OK_OPTION);
                 break;
             case "!leave":
                 int disconnected;

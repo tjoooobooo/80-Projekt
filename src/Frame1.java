@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.IOException;
-import java.util.Objects;
 
 public class Frame1 extends JFrame {
     Network network = new Network();
@@ -46,12 +44,10 @@ public class Frame1 extends JFrame {
 
         gameType.addActionListener(e -> {
             if(gameType.getSelectedIndex() != 0) {
-                System.out.println("1 Spieler");
                 names.remove(inputEnemyName);
 
             } else {
                 names.add(inputEnemyName);
-                System.out.println("2 Spielernamen");
             }
             names.repaint();
         });
@@ -65,6 +61,7 @@ public class Frame1 extends JFrame {
             //-------Netzwerk verbinden---------------------------------------------------------------
             if (gameType.getSelectedIndex() == 2) {
                 network.setIP(inputIP.getText().isEmpty() ? "localhost" : inputIP.getText());
+
                 while (!network.isAccepted() && network.getisServer()) {
                     network.listenForServerRequest();
                 }
@@ -79,6 +76,7 @@ public class Frame1 extends JFrame {
                 Thread thread = new Thread(() -> {
                     try {
                         while (secondFrame.serverActive) {
+                            int i = 0;
                             if (network.dis.available() == 4) {
                                 Integer tmp = network.dis.readInt();
                                 secondFrame.updateButtons(true);
@@ -89,25 +87,31 @@ public class Frame1 extends JFrame {
                                 if ((s.replace(name, "")).replace(enemyName, "").substring(2,3).equals("!")) {
                                     s = s.replace(name, "").replace(enemyName, "");
                                     s = s.substring(2,s.length());
+                                    int tmp;
                                     switch (s) {
                                         case "!kick":
                                             System.out.println("Du wurdest aus der Sitzung geworfen!");
                                             break;
                                         case "!leave":
-                                            int disconnected;
                                             if (network.getisServer()) {
-                                                disconnected = JOptionPane.showConfirmDialog(null, "Client has left game\nback to game options?", "Client disconnected", JOptionPane.OK_CANCEL_OPTION);
+                                                tmp = JOptionPane.showConfirmDialog(null, "Client has left game\nback to game options?", "Client disconnected", JOptionPane.OK_CANCEL_OPTION);
                                             } else {
-                                                disconnected = JOptionPane.showConfirmDialog(null, "Server has left game\nback to game options?", "Server disconnected", JOptionPane.OK_CANCEL_OPTION);
+                                                tmp = JOptionPane.showConfirmDialog(null, "Server has left game\nback to game options?", "Server disconnected", JOptionPane.OK_CANCEL_OPTION);
                                             }
-                                            if (disconnected == 0) secondFrame.optionsButton.doClick();
+                                            if (tmp == 0) secondFrame.optionsButton.doClick();
                                             else System.exit(0);
                                             break;
                                         case "!iGiveUp":
-                                            //TODO giveUp online
                                             JOptionPane.showMessageDialog(null,enemyName + " gave up", "YOU WON",JOptionPane.OK_OPTION);
                                             secondFrame.gameOver(true);
                                             break;
+                                        case "!reset?":
+                                            tmp = JOptionPane.showConfirmDialog(null,"Opponnent asks if you want to reset the stats","Reset the stats?", JOptionPane.YES_NO_OPTION);
+                                            if(tmp == 0) secondFrame.resetStats();
+                                            else secondFrame.sendChatText("!resetDenied");
+                                            break;
+                                        case "!resetDenied":
+                                            JOptionPane.showMessageDialog(null,"Reset was denied","No reset", JOptionPane.OK_OPTION);
                                         default:
                                             System.out.println("Unbekannter Befehl!");
                                             break;

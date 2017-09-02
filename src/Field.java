@@ -38,28 +38,37 @@ public class Field extends JButton implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        buttonNumber = fieldnumber;
-        secondFrame.gameStoneP1.setEnabled(false);
-        secondFrame.gameStoneP2.setEnabled(false);
-        TicTacToe tmp = new TicTacToe();
-        switch (val) {
-            case 1:
-                if (t3.isWin() || t3.isDraw()) break;
-                setIcon(icons[secondFrame.gameStoneP1.getSelectedIndex()]);
-                tmp = (TicTacToe) t3.makeMove(new Move(fieldnumber));
-                break;
-            case -1:
-                if (t3.isWin() || t3.isDraw()) break;
-                setIcon(icons[secondFrame.gameStoneP2.getSelectedIndex()]);
-                tmp = (TicTacToe) t3.makeMove(new Move(fieldnumber));
-                break;
-            default:
-                setIcon(null);
+        if(t3.getBoard()[fieldnumber] != 0) {
+            JOptionPane.showMessageDialog(null, "This place is already taken!", "Wrong move", JOptionPane.OK_OPTION);
+
+        } else if(secondFrame.gameStoneP1.getSelectedIndex() == secondFrame.gameStoneP2.getSelectedIndex()) {
+            JOptionPane.showMessageDialog(null,"You should select two different stones", "Invalid stone selection",JOptionPane.OK_OPTION);
+
+        } else {
+            buttonNumber = fieldnumber;
+            secondFrame.gameStoneP1.setEnabled(false);
+            secondFrame.gameStoneP2.setEnabled(false);
+            TicTacToe tmp = new TicTacToe();
+            switch (val) {
+                case 1:
+                    if (t3.isWin() || t3.isDraw()) break;
+                    setIcon(icons[secondFrame.gameStoneP1.getSelectedIndex()]);
+                    tmp = (TicTacToe) t3.makeMove(new Move(fieldnumber));
+                    break;
+                case -1:
+                    if (t3.isWin() || t3.isDraw()) break;
+                    setIcon(icons[secondFrame.gameStoneP2.getSelectedIndex()]);
+                    tmp = (TicTacToe) t3.makeMove(new Move(fieldnumber));
+                    break;
+                default:
+                    setIcon(null);
+            }
+            val = -val;
+            t3 = tmp;
+            secondFrame.updateButtons(!secondFrame.firstFrame.network.isYourTurn());
+            secondFrame.check(fieldnumber);
         }
-        val = -val;
-        t3 = tmp;
-        secondFrame.updateButtons(!secondFrame.firstFrame.network.isYourTurn());
-        secondFrame.check(fieldnumber);
+
     }
 
 }

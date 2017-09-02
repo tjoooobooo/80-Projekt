@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -69,7 +70,6 @@ public class Frame2 extends JFrame {
         countersPanel.add(jLabel4);
         draws.setText("0");
         countersPanel.add(draws);
-        // TODO Namen online übertragen und an richtiger stelle anzeigen
         //--------background and stone selection--------------------------------------------
         optionsPanel.setLayout(new java.awt.GridLayout(4, 1, 0, 5));
         jLabel1.setText("Select Stone");
@@ -126,32 +126,27 @@ public class Frame2 extends JFrame {
         });
         //-----Buttons----------------------------------------------
         giveUpButton.addActionListener(e -> {
-            //TODO online muss richtig bestimmt werden wer aufgibt
             gameOver(true);
             if(firstFrame.gameChoose == 2) sendChatText("!iGiveUp");
         });
         resetButton.addActionListener(e -> {
-            p1WinsCounter = p2WinsCounter = drawsCounter = 0;
-            updateCounters();
-            Field.t3 = new TicTacToe();
-            gameStoneP1.setSelectedIndex(0);
-            gameStoneP2.setSelectedIndex(1);
-            background.setSelectedIndex(0);
-            newGame();
+            if(firstFrame.gameChoose == 2) {
+                sendChatText("!reset?");
+            } else resetStats();
+
         });
         optionsButton.addActionListener(e -> {
             Field.t3 = new TicTacToe();
             setVisible(false);
+            firstFrame = new Frame1();
             if (firstFrame.gameChoose == 2 && serverActive) {
                 sendChatText("!leave");
                 firstFrame.network.closeServer();
                 serverActive = false;
-                firstFrame = new Frame1();
             }
         });
 
         sendChatButton.addActionListener(e -> {
-            //TODO online
             sendChatText("");
         });
         chatInputPane.addKeyListener(new KeyListener() {
@@ -175,63 +170,63 @@ public class Frame2 extends JFrame {
             }
         });
         //--------Layout-----------------------------------------------------------------------------------------------------------------------------------------------------------
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGap(10, 10, 10)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                         .addGroup(layout.createSequentialGroup()
-                                                                .addComponent(chatInputScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 534, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(chatInputScrollPane, GroupLayout.PREFERRED_SIZE, 534, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(sendChatButton))
                                                         .addGroup(layout.createSequentialGroup()
-                                                                .addComponent(field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                        .addComponent(countersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                                .addComponent(field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(countersPanel, GroupLayout.PREFERRED_SIZE, 199, GroupLayout.PREFERRED_SIZE)
+                                                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
                                                                                 .addGroup(layout.createSequentialGroup()
-                                                                                        .addComponent(giveUpButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                                        .addComponent(giveUpButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                                                         .addGap(18, 18, 18)
                                                                                         .addComponent(resetButton))
-                                                                                .addComponent(optionsButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                                .addComponent(recPlay, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                                                                .addComponent(optionsButton, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                                .addComponent(recPlay, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addContainerGap()
-                                                .addComponent(chatTextScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 561, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(chatTextScrollPane, GroupLayout.PREFERRED_SIZE, 561, GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 0, Short.MAX_VALUE))
                         .addGroup(layout.createSequentialGroup()
                                 .addGap(420, 420, 420)
-                                .addComponent(optionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(optionsPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addGap(11, 11, 11)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(field, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addGroup(layout.createSequentialGroup()
-                                                .addComponent(countersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(countersPanel, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(recPlay)
                                                 .addGap(18, 18, 18)
                                                 .addComponent(optionsButton)
                                                 .addGap(18, 18, 18)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(giveUpButton)
                                                         .addComponent(resetButton))
                                                 .addGap(24, 24, 24)
-                                                .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                                .addComponent(chatTextScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(sendChatButton, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                                                .addComponent(optionsPanel, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                                .addComponent(chatTextScrollPane, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(sendChatButton, GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
                                         .addComponent(chatInputScrollPane))
                                 .addContainerGap())
         );
@@ -243,6 +238,7 @@ public class Frame2 extends JFrame {
             sendChatButton.setVisible(false);
         } else updateButtons(firstFrame.network.isYourTurn());
     }
+    //------------------------------------------------------------------------------------------------------------------------------------------
     public void updateButtons(boolean update){
         for(Field button : buttons) {
             if (update) {
@@ -258,65 +254,40 @@ public class Frame2 extends JFrame {
     public void sendChatText(String text) {
         text = text.isEmpty() ? chatInputPane.getText() : text;
         if (text.isEmpty() || text.equals("\n")) return;
-        //command or message
-        //if(text.substring(0,1).equals("!")) processingCommands(text);
         text = firstFrame.name + ": " + text;
+        if (!text.substring(firstFrame.name.length()+2,firstFrame.name.length()+3).equals("!")) addChatText(text);
         try {
             firstFrame.network.dos.writeUTF(text);
             firstFrame.network.dos.flush();
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        if (!text.substring(0,1).equals("!")) addChatText(text);
+        chatInputPane.setText("");
     }
 
     public void addChatText(String s) {
         sB.append(s + "\n");
         chatTextField.setText(String.valueOf(sB));
-        chatInputPane.setText("");
     }
 
-    public void processingCommands(String command) {
-        switch (command) {
-            case "!kick":
-                if(firstFrame.network.getisServer()) {
-                    int kicked;
-                    System.out.println("Du wurdest aus der Sitzung geworfen!");
-                    kicked = JOptionPane.showConfirmDialog(null, "Server has kicked you\nback to game options?", "You have been kicked", JOptionPane.OK_CANCEL_OPTION);
-                    firstFrame.network.disconnectPlayerFromServer();
-                    if (kicked == 0) optionsButton.doClick();
-                    else System.exit(0);
-                } else JOptionPane.showMessageDialog(null, "Only the server has permission to kick players", "Invalid command", JOptionPane.OK_OPTION);
-                break;
-            case "!leave":
-                int disconnected;
-                if (firstFrame.network.getisServer()) {
-                    disconnected = JOptionPane.showConfirmDialog(null, "Client has left game\nback to game options?", "Client disconnected", JOptionPane.OK_CANCEL_OPTION);
-                } else {
-                    disconnected = JOptionPane.showConfirmDialog(null, "Server has left game\nback to game options?", "Server disconnected", JOptionPane.OK_CANCEL_OPTION);
-                }
-                if (disconnected == 0) optionsButton.doClick();
-                else System.exit(0);
-                break;
-            case "!iGiveUp":
-                //TODO giveUp online
-                //JOptionPane.showMessageDialog(null,firstFrame.enemyName + " gave up", "YOU WON",JOptionPane.OK_OPTION);
-                break;
-            default:
-                System.out.println("Unbekannter Befehl!");
-                break;
-        }
+    public void resetStats(){
+        p1WinsCounter = p2WinsCounter = drawsCounter = 0;
+        updateCounters();
+        Field.t3 = new TicTacToe();
+        gameStoneP1.setSelectedIndex(0);
+        gameStoneP2.setSelectedIndex(1);
+        background.setSelectedIndex(0);
+        newGame();
     }
 
     public void newGame() {
-        //setVisible(false);
         gameStoneP1.setEnabled(true);
         gameStoneP2.setEnabled(true);
         for (int i = 0; i < 9; i++) buttons[i].setIcon(null);
-        //new Layout();
     }
-    //------------------------------------------------------------------------------------------------------------------------------------------
+
     public void check(int fieldnumber) {
+        //-----------Multiplayer online--------------------------------------------------
         if (Frame1.gameChoose == 2 && firstFrame.network.isYourTurn()) {
             try {
                 firstFrame.network.dos.writeInt(fieldnumber);
@@ -341,7 +312,6 @@ public class Frame2 extends JFrame {
     }
 
     public void gameOver(boolean giveUp) {
-        // TODO turn ist falsch nachdem player1 gewinnt online
         int nextGame;
         if(Field.t3.isWin() || giveUp){
             if(Field.val == -1) {

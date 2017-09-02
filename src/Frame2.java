@@ -59,10 +59,13 @@ public class Frame2 extends JFrame {
         //-------wins & draws counters---------------------------------------------------------
         countersPanel.setLayout(new java.awt.GridLayout(3, 3, 15, 20));
         jLabel2.setText(frame1.name + " wins:");
+        jLabel2.setOpaque(true);
+        if(firstFrame.gameChoose == 0) jLabel2.setBackground(Color.green);
         countersPanel.add(jLabel2);
         player1Wins.setText("0");
         countersPanel.add(player1Wins);
         jLabel3.setText(frame1.enemyName + " wins:");
+        jLabel3.setOpaque(true);
         countersPanel.add(jLabel3);
         player2Wins.setText("0");
         countersPanel.add(player2Wins);
@@ -284,6 +287,15 @@ public class Frame2 extends JFrame {
         gameStoneP1.setEnabled(true);
         gameStoneP2.setEnabled(true);
         for (int i = 0; i < 9; i++) buttons[i].setIcon(null);
+        if(firstFrame.gameChoose == 0){
+            if(buttons[0].val == 1) {
+                jLabel2.setBackground(Color.green);
+                jLabel3.setBackground(null);
+            } else {
+                jLabel3.setBackground(Color.green);
+                jLabel2.setBackground(null);
+            }
+        }
     }
 
     public void check(int fieldnumber) {

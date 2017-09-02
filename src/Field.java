@@ -45,6 +45,15 @@ public class Field extends JButton implements ActionListener {
             JOptionPane.showMessageDialog(null,"You should select two different stones", "Invalid stone selection",JOptionPane.OK_OPTION);
 
         } else {
+            if(secondFrame.firstFrame.gameChoose == 0){
+                if(val == -1) {
+                    secondFrame.jLabel2.setBackground(Color.green);
+                    secondFrame.jLabel3.setBackground(null);
+                } else {
+                    secondFrame.jLabel3.setBackground(Color.green);
+                    secondFrame.jLabel2.setBackground(null);
+                }
+            }
             buttonNumber = fieldnumber;
             secondFrame.gameStoneP1.setEnabled(false);
             secondFrame.gameStoneP2.setEnabled(false);

@@ -60,9 +60,9 @@ public class Frame1 extends JFrame {
             // TODO Fenster wird erst richtig angezeigt wenn verbindung da ist
             //-------Netzwerk verbinden---------------------------------------------------------------
             if (gameType.getSelectedIndex() == 2) {
+                //Waiting frame = new Waiting();
                 network.setIP(inputIP.getText().isEmpty() ? "localhost" : inputIP.getText());
-
-                while (!network.isAccepted() && network.getisServer()) {
+                while (!network.isAccepted()) {
                     network.listenForServerRequest();
                 }
                 try {
@@ -76,7 +76,6 @@ public class Frame1 extends JFrame {
                 Thread thread = new Thread(() -> {
                     try {
                         while (secondFrame.serverActive) {
-                            int i = 0;
                             if (network.dis.available() == 4) {
                                 Integer tmp = network.dis.readInt();
                                 secondFrame.updateButtons(true);
@@ -107,11 +106,18 @@ public class Frame1 extends JFrame {
                                             break;
                                         case "!reset?":
                                             tmp = JOptionPane.showConfirmDialog(null,"Opponnent asks if you want to reset the stats","Reset the stats?", JOptionPane.YES_NO_OPTION);
-                                            if(tmp == 0) secondFrame.resetStats();
+                                            if(tmp == 0) {
+                                                secondFrame.resetStats();
+                                                secondFrame.sendChatText("!reset");
+                                            }
                                             else secondFrame.sendChatText("!resetDenied");
                                             break;
                                         case "!resetDenied":
                                             JOptionPane.showMessageDialog(null,"Reset was denied","No reset", JOptionPane.OK_OPTION);
+                                            break;
+                                        case "!reset":
+                                            secondFrame.resetStats();
+                                            break;
                                         default:
                                             System.out.println("Unbekannter Befehl!");
                                             break;

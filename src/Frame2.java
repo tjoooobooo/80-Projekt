@@ -1,82 +1,70 @@
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 
-public class Frame2 extends JFrame {
+class Frame2 extends JFrame {
+    Field[] buttons = new Field[9];
+    private JTextPane chatInputPane = new JTextPane();
 
-    public Field[] buttons = new Field[9];
-
-    public JPanel countersPanel = new JPanel();
-    public JPanel optionsPanel = new JPanel();
-    public JPanel field = new JPanel();
-    private JScrollPane chatInputScrollPane = new JScrollPane();
-    private JScrollPane chatTextScrollPane = new JScrollPane();
-    JTextPane chatInputPane = new JTextPane();
-
-    JLabel jLabel1 = new JLabel();
     JLabel jLabel2 = new JLabel();
     JLabel jLabel3 = new JLabel();
-    JLabel jLabel4 = new JLabel();
-    JLabel jLabel8 = new JLabel();
-    JLabel player1Wins = new JLabel();
-    JLabel player2Wins = new JLabel();
-    JLabel draws = new JLabel();
+    private JLabel player1Wins = new JLabel();
+    private JLabel player2Wins = new JLabel();
+    private JLabel draws = new JLabel();
 
-    JPanel gameStones = new JPanel();
     JComboBox<String> gameStoneP1 = new JComboBox<>();
     JComboBox<String> gameStoneP2 = new JComboBox<>();
-    JComboBox<String> background = new JComboBox<>();
+    private JComboBox<String> background = new JComboBox<>();
 
-    JButton recPlay = new JButton("show recommended play");
-    JButton sendChatButton = new JButton("send");
     JButton optionsButton = new JButton("back to game options");
-    JButton resetButton = new JButton("reset");
-    JButton giveUpButton = new JButton("give up");
+    private JButton giveUpButton = new JButton("give up");
 
     JTextArea chatTextField = new JTextArea();
-    StringBuilder sB = new StringBuilder();
+    private StringBuilder sB = new StringBuilder();
     Frame1 firstFrame;
     boolean serverActive = true;
 
-    static int p1WinsCounter = 0;
-    static int p2WinsCounter = 0;
-    static int drawsCounter = 0;
+    private static int p1WinsCounter = 0;
+    private static int p2WinsCounter = 0;
+    private static int drawsCounter = 0;
 
-    int p1Stone;
-    int p2Stone;
+    private int p1Stone;
+    private int p2Stone;
 
     Frame2(Frame1 frame1) {
         setTitle("Tic-Tac-Toe");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
-        if (frame1.gameChoose == 2) setSize(new Dimension(600, 600));
+        if (Frame1.gameChoose == 2) setSize(new Dimension(600, 600));
         else setPreferredSize(new Dimension(650, 480));
         chatTextField.setEditable(false);
         firstFrame = frame1;
         //-------wins & draws counters---------------------------------------------------------
+        JPanel countersPanel = new JPanel();
         countersPanel.setLayout(new java.awt.GridLayout(3, 3, 15, 20));
-        jLabel2.setText(frame1.name + " wins:");
+        jLabel2.setText(Frame1.name + " wins:");
         jLabel2.setOpaque(true);
-        if (firstFrame.gameChoose == 0) jLabel2.setBackground(Color.green);
+        if (Frame1.gameChoose == 0) jLabel2.setBackground(Color.green);
         countersPanel.add(jLabel2);
         player1Wins.setText("0");
         countersPanel.add(player1Wins);
-        jLabel3.setText(frame1.enemyName + " wins:");
+        jLabel3.setText(Frame1.enemyName + " wins:");
         jLabel3.setOpaque(true);
         countersPanel.add(jLabel3);
         player2Wins.setText("0");
         countersPanel.add(player2Wins);
+        JLabel jLabel4 = new JLabel();
         jLabel4.setText("Draws: ");
         countersPanel.add(jLabel4);
         draws.setText("0");
         countersPanel.add(draws);
         //--------background and stone selection--------------------------------------------
+        JPanel optionsPanel = new JPanel();
         optionsPanel.setLayout(new java.awt.GridLayout(4, 1, 0, 5));
+        JLabel jLabel1 = new JLabel();
         jLabel1.setText("Select Stone");
         optionsPanel.add(jLabel1);
         String[] stoneTypes = {"X", "O", "Monkey", "Cat", "Penguin", "Crown", "Smiley"};
@@ -85,7 +73,8 @@ public class Frame2 extends JFrame {
         gameStoneP2.setModel(new DefaultComboBoxModel<>(stoneTypes));
         gameStoneP2.setSelectedIndex(1);
         gameStoneP2.addActionListener(gameStoneListener);
-        if (firstFrame.gameChoose != 2) {
+        if (Frame1.gameChoose != 2) {
+            JPanel gameStones = new JPanel();
             gameStones.setLayout(new GridLayout());
             gameStones.add(gameStoneP1);
             gameStones.add(gameStoneP2);
@@ -93,6 +82,7 @@ public class Frame2 extends JFrame {
         } else if (firstFrame.network.getisServer()) {
             optionsPanel.add(gameStoneP1);
         } else optionsPanel.add(gameStoneP2);
+        JLabel jLabel8 = new JLabel();
         jLabel8.setText("Select Background");
         optionsPanel.add(jLabel8);
         background.setModel(new DefaultComboBoxModel<>(new String[]{"default", "blue", "pink", "yellow"}));
@@ -104,6 +94,7 @@ public class Frame2 extends JFrame {
             }
         });
         //-------Tic Tac Toe field-------------------
+        JPanel field = new JPanel();
         field.setPreferredSize(new Dimension(400, 400));
         field.setLayout(new GridLayout(3, 3));
         for (int i = 0; i < 9; i++) {
@@ -111,8 +102,11 @@ public class Frame2 extends JFrame {
             field.add(buttons[i]);
         }
         //------Chat--------------------------------------
+        JScrollPane chatInputScrollPane = new JScrollPane();
         chatInputScrollPane.setViewportView(chatInputPane);
+        JScrollPane chatTextScrollPane = new JScrollPane();
         chatTextScrollPane.setViewportView(chatTextField);
+        JButton recPlay = new JButton("show recommended play");
         recPlay.addActionListener(evt -> {
             int num = (new Algorithmen(Field.t3).minimax()).getT3();
             Thread thread = new Thread(() -> {
@@ -135,21 +129,22 @@ public class Frame2 extends JFrame {
         //-----Buttons----------------------------------------------
         giveUpButton.addActionListener(e -> {
             gameOver(true);
-            if (firstFrame.gameChoose == 2) sendChatText("!iGiveUp");
+            if (Frame1.gameChoose == 2) sendChatText("!iGiveUp");
         });
+        JButton resetButton = new JButton("reset");
         resetButton.addActionListener(e -> {
-            if (firstFrame.gameChoose == 2) {
+            if (Frame1.gameChoose == 2) {
                 sendChatText("!reset?");
             } else resetStats();
-            if (firstFrame.gameChoose == 0) {
-                buttons[0].val = 1;
+            if (Frame1.gameChoose == 0) {
+                Field.val = 1;
                 jLabel2.setBackground(Color.green);
                 jLabel3.setBackground(null);
             }
 
         });
         optionsButton.addActionListener(e -> {
-            if (firstFrame.gameChoose == 2 && serverActive) {
+            if (Frame1.gameChoose == 2 && serverActive) {
                 sendChatText("!userDisconnected");
                 firstFrame.network.closeServer();
                 serverActive = false;
@@ -159,9 +154,8 @@ public class Frame2 extends JFrame {
             firstFrame = new Frame1();
         });
 
-        sendChatButton.addActionListener(e -> {
-            sendChatText("");
-        });
+        JButton sendChatButton = new JButton("send");
+        sendChatButton.addActionListener(e -> sendChatText(""));
         chatInputPane.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -245,7 +239,7 @@ public class Frame2 extends JFrame {
         );
         pack();
         setVisible(true);
-        if (firstFrame.gameChoose != 2) {
+        if (Frame1.gameChoose != 2) {
             chatInputScrollPane.setVisible(false);
             chatTextScrollPane.setVisible(false);
             sendChatButton.setVisible(false);
@@ -253,17 +247,17 @@ public class Frame2 extends JFrame {
     }
 
     //------------------------------------------------------------------------------------------------------------------------------------------
-    ActionListener gameStoneListener = e -> {
+    private ActionListener gameStoneListener = e -> {
 
         if (gameStoneP2.getSelectedIndex() != p2Stone || gameStoneP1.getSelectedIndex() != p1Stone) {
             if (gameStoneP1.getSelectedIndex() == gameStoneP2.getSelectedIndex()) {
                 gameStoneP1.setSelectedIndex(0);
                 gameStoneP2.setSelectedIndex(1);
-                JOptionPane.showMessageDialog(firstFrame, "You should select two different stones", "Invalid stone selection", JOptionPane.OK_OPTION);
+                JOptionPane.showMessageDialog(firstFrame, "You should select two different stones", "Invalid stone selection", JOptionPane.ERROR_MESSAGE);
             } else {
                 p1Stone = gameStoneP1.getSelectedIndex();
                 p2Stone = gameStoneP2.getSelectedIndex();
-                if (firstFrame.gameChoose == 2) {
+                if (Frame1.gameChoose == 2) {
                     try {
                         firstFrame.network.dos.writeUTF(("/nehmeStein" + (firstFrame.network.getisServer() ? gameStoneP1.getSelectedIndex() : gameStoneP2.getSelectedIndex())));
                     } catch (IOException e1) {
@@ -274,7 +268,7 @@ public class Frame2 extends JFrame {
         }
     };
 
-    public void updateButtons(boolean update) {
+    void updateButtons(boolean update) {
         for (Field button : buttons) {
             if (update) {
                 button.setEnabled(true);
@@ -286,11 +280,11 @@ public class Frame2 extends JFrame {
         }
     }
 
-    public void sendChatText(String text) {
+    void sendChatText(String text) {
         text = text.isEmpty() ? chatInputPane.getText() : text;
         if (text.isEmpty() || text.equals("\n")) return;
-        text = firstFrame.name + ": " + text;
-        if (!text.substring(firstFrame.name.length() + 2, firstFrame.name.length() + 3).equals("!")) addChatText(text);
+        text = Frame1.name + ": " + text;
+        if (!text.substring(Frame1.name.length() + 2, Frame1.name.length() + 3).equals("!")) addChatText(text);
         try {
             firstFrame.network.dos.writeUTF(text);
             firstFrame.network.dos.flush();
@@ -300,12 +294,12 @@ public class Frame2 extends JFrame {
         chatInputPane.setText("");
     }
 
-    public void addChatText(String s) {
-        sB.append(s + "\n");
+    void addChatText(String s) {
+        sB.append(s).append("\n");
         chatTextField.setText(String.valueOf(sB));
     }
 
-    public void resetStats() {
+    void resetStats() {
         p1WinsCounter = p2WinsCounter = drawsCounter = 0;
         updateCounters();
         Field.t3 = new TicTacToe();
@@ -315,12 +309,12 @@ public class Frame2 extends JFrame {
         newGame();
     }
 
-    public void newGame() {
+    private void newGame() {
         gameStoneP1.setEnabled(true);
         gameStoneP2.setEnabled(true);
         for (int i = 0; i < 9; i++) buttons[i].setIcon(null);
-        if (firstFrame.gameChoose == 0) {
-            if (buttons[0].val == 1) {
+        if (Frame1.gameChoose == 0) {
+            if (Field.val == 1) {
                 jLabel2.setBackground(Color.green);
                 jLabel3.setBackground(null);
             } else {
@@ -330,7 +324,7 @@ public class Frame2 extends JFrame {
         }
     }
 
-    public void check(int fieldnumber) {
+    void check(int fieldnumber) {
         //-----------Multiplayer online--------------------------------------------------
         if (Frame1.gameChoose == 2 && firstFrame.network.isYourTurn()) {
             try {
@@ -355,7 +349,7 @@ public class Frame2 extends JFrame {
         //--------------------------------------------------------------------------------------------
     }
 
-    public void gameOver(boolean giveUp) {
+    void gameOver(boolean giveUp) {
         int nextGame;
         if (Field.t3.isWin() || giveUp) {
             if (Field.val == -1) {
@@ -370,7 +364,7 @@ public class Frame2 extends JFrame {
             nextGame = JOptionPane.showConfirmDialog(null, "Game is draw\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
         }
         if (nextGame == 0) {
-            if (firstFrame.gameChoose != 2) Field.val = 1;
+            if (Frame1.gameChoose != 2) Field.val = 1;
             Field.counter = 0;
             newGame();
             Field.t3 = new TicTacToe();
@@ -381,7 +375,7 @@ public class Frame2 extends JFrame {
         updateCounters();
     }
 
-    public void updateCounters() {
+    private void updateCounters() {
         if (!firstFrame.network.getisServer()) {
             player1Wins.setText(String.valueOf(p2WinsCounter));
             player2Wins.setText(String.valueOf(p1WinsCounter));

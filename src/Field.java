@@ -5,16 +5,16 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class Field extends JButton implements ActionListener {
-    static String[] stones = {"X.png", "O.png", "monkey.png", "cat.png", "penguin.png", "krone.png", "smiley.png"};
+    private static String[] stones = {"X.png", "O.png", "monkey.png", "cat.png", "penguin.png", "krone.png", "smiley.png"};
     static ImageIcon[] icons = new ImageIcon[stones.length];
     static int val = 1;
     static int counter = 0;
-    int fieldnumber = counter % 9;
+    private int fieldnumber = counter % 9;
     static TicTacToe t3 = new TicTacToe();
-    static Integer buttonNumber;
-    Frame2 secondFrame;
+    private static Integer buttonNumber;
+    private Frame2 secondFrame;
 
-    public Field(Frame2 secondFrame) {
+    Field(Frame2 secondFrame) {
         this.secondFrame = secondFrame;
         counter++;
         this.addActionListener(this);
@@ -39,7 +39,7 @@ public class Field extends JButton implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(t3.getBoard()[fieldnumber] != 0) {
-            JOptionPane.showMessageDialog(null, "This place is already taken!", "Wrong move", JOptionPane.OK_OPTION);
+            JOptionPane.showMessageDialog(null, "This place is already taken!", "Wrong move", JOptionPane.ERROR_MESSAGE);
         } else {
             buttonNumber = fieldnumber;
             secondFrame.gameStoneP1.setEnabled(false);
@@ -64,7 +64,7 @@ public class Field extends JButton implements ActionListener {
             secondFrame.updateButtons(!secondFrame.firstFrame.network.isYourTurn());
             secondFrame.check(fieldnumber);
         }
-        if(secondFrame.firstFrame.gameChoose == 0){
+        if(Frame1.gameChoose == 0){
             if(val == 1) {
                 secondFrame.jLabel2.setBackground(Color.green);
                 secondFrame.jLabel3.setBackground(null);

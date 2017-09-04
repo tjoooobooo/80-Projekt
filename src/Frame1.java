@@ -4,23 +4,21 @@ import java.io.IOException;
 
 public class Frame1 extends JFrame {
     Network network = new Network();
-    public JComboBox gameType;
+    private JComboBox<String> gameType;
     static String name;
     static String enemyName;
-    public static int gameChoose;
-    JLabel names = new JLabel();
-    JTextField inputName = new JTextField();
-    JTextField inputEnemyName = new JTextField();
-    JTextField inputIP = new JTextField();
-    JButton button1, button2;
-    Frame1 frame1 = this;
-    Frame2 secondFrame;
-
+    static int gameChoose;
+    private JLabel names = new JLabel();
+    private JTextField inputName = new JTextField();
+    private JTextField inputEnemyName = new JTextField();
+    private JTextField inputIP = new JTextField();
+    private Frame1 frame1 = this;
+    private Frame2 secondFrame;
     public static void main(String args[]) {
         new Frame1();
     }
 
-    public Frame1() {
+    Frame1() {
         setTitle("Tic-Tac-Toe");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
@@ -28,7 +26,7 @@ public class Frame1 extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(4, 2));
         panel.add(new JLabel(" Choose Game Type"));
-        gameType = new JComboBox(new String[]{"Local(PVP)", "Local(PVC)", "Online(PVP)"});
+        gameType = new JComboBox<>(new String[]{"Local(PVP)", "Local(PVC)", "Online(PVP)"});
         panel.add(gameType);
         panel.add(new JLabel(" Write your Name"));
 
@@ -39,8 +37,8 @@ public class Frame1 extends JFrame {
 
         panel.add(new JLabel("Choose IP-Address"));
         panel.add(inputIP);
-        button1 = new JButton("Confirm");
-        button2 = new JButton("Cancel");
+        JButton button1 = new JButton("Confirm");
+        JButton button2 = new JButton("Cancel");
 
         gameType.addActionListener(e -> {
             if (gameType.getSelectedIndex() != 0) {
@@ -116,7 +114,7 @@ public class Frame1 extends JFrame {
                                             else System.exit(0);
                                             break;
                                         case "!iGiveUp":
-                                            JOptionPane.showMessageDialog(null, enemyName + " gave up", "YOU WON", JOptionPane.OK_OPTION);
+                                            JOptionPane.showMessageDialog(null, enemyName + " gave up", "YOU WON", JOptionPane.ERROR_MESSAGE);
                                             secondFrame.gameOver(true);
                                             break;
                                         case "!reset?":
@@ -127,7 +125,7 @@ public class Frame1 extends JFrame {
                                             } else secondFrame.sendChatText("!resetDenied");
                                             break;
                                         case "!resetDenied":
-                                            JOptionPane.showMessageDialog(null, "Reset was denied", "No reset", JOptionPane.OK_OPTION);
+                                            JOptionPane.showMessageDialog(null, "Reset was denied", "No reset", JOptionPane.ERROR_MESSAGE);
                                             break;
                                         case "!reset":
                                             secondFrame.resetStats();

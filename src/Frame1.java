@@ -61,7 +61,6 @@ public class Frame1 extends JFrame {
             name = inputName.getText().isEmpty() ? "Player1" : inputName.getText();
             if(gameChoose == 0) enemyName = inputEnemyName.getText().isEmpty() ? "Player2" : inputEnemyName.getText();
             else enemyName = inputEnemyName.getText().isEmpty() ? "Computer" : inputEnemyName.getText();
-            //setVisible(false);
             //-------Netzwerk verbinden---------------------------------------------------------------
             if (gameType.getSelectedIndex() == 2) {
                 frame1.remove(panel);
@@ -85,6 +84,7 @@ public class Frame1 extends JFrame {
                     secondFrame = new Frame2(frame1);
                     try {
                         while (network.isAccepted()) {
+                            network.dos.writeUTF(("/nehmeStein" + (network.getisServer() ? secondFrame.gameStoneP1.getSelectedIndex() : secondFrame.gameStoneP2.getSelectedIndex())));
                             if (network.dis.available() == 4) {
                                 Integer tmp = network.dis.readInt();
                                 secondFrame.updateButtons(true);
@@ -92,7 +92,12 @@ public class Frame1 extends JFrame {
                                 network.swapTurn();
                             } else if (network.dis.available() > 4) {
                                 String s = network.dis.readUTF();
-                                if ((s.replace(name, "")).replace(enemyName, "").substring(2, 3).equals("!")) {
+                                if (s.startsWith("/nehmeStein")) {
+                                    s = s.replace("/nehmeStein", "");
+                                    if (network.getisServer())
+                                        secondFrame.gameStoneP2.setSelectedIndex(Integer.parseInt(s));
+                                    else secondFrame.gameStoneP1.setSelectedIndex(Integer.parseInt(s));
+                                } else if ((s.replace(name, "")).replace(enemyName, "").substring(2, 3).equals("!")) {
                                     s = s.replace(name, "").replace(enemyName, "");
                                     s = s.substring(2, s.length());
                                     int tmp;
@@ -131,17 +136,16 @@ public class Frame1 extends JFrame {
                                             System.out.println("Unbekannter Befehl!");
                                             break;
                                     }
-                                } else {
+                                } else
                                     secondFrame.addChatText(s);
-                                    secondFrame.chatTextField.setCaretPosition(secondFrame.chatTextField.getText().length());
-                                }
+                                secondFrame.chatTextField.setCaretPosition(secondFrame.chatTextField.getText().length());
                             }
+                        }
                             try {
                                 Thread.sleep(100);
                             } catch (InterruptedException e2) {
                                 e2.printStackTrace();
                             }
-                        }
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }

@@ -8,7 +8,7 @@ public class WaitingPanel extends JPanel{
     public WaitingPanel(){
         //setSize(200,150);
         setLayout(new BorderLayout());
-        ImageIcon loadingGif = new ImageIcon("res/ajax-loader.gif");
+        ImageIcon loadingGif = new ImageIcon("res/loading.gif");
         JLabel label = new JLabel("waiting for other player",loadingGif,SwingConstants.CENTER);
         add(label,BorderLayout.CENTER);
         JButton exit = new JButton("Exit");

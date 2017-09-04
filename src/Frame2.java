@@ -86,9 +86,9 @@ public class Frame2 extends JFrame {
             gameStones.add(gameStoneP1);
             gameStones.add(gameStoneP2);
             optionsPanel.add(gameStones);
-        } else {
+        } else if(firstFrame.network.getisServer()){
             optionsPanel.add(gameStoneP1);
-        }
+        } else optionsPanel.add(gameStoneP2);
         jLabel8.setText("Select Background");
         optionsPanel.add(jLabel8);
         background.setModel(new DefaultComboBoxModel<>(new String[]{"default", "blue", "pink", "yellow"}));

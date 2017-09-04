@@ -1,9 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Waiting extends JFrame{
+public class WaitingFrame extends JFrame{
 
-    public Waiting(){
+    public WaitingFrame(){
         setSize(200,150);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new GridLayout(2,2));

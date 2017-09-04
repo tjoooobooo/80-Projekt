@@ -67,7 +67,7 @@ public class Field extends JButton implements ActionListener {
             secondFrame.check(fieldnumber);
         }
         if(secondFrame.firstFrame.gameChoose == 0){
-            if(val == -1) {
+            if(val == 1) {
                 secondFrame.jLabel2.setBackground(Color.green);
                 secondFrame.jLabel3.setBackground(null);
             } else {

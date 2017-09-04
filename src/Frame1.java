@@ -59,7 +59,8 @@ public class Frame1 extends JFrame {
         button1.addActionListener(e -> {
             gameChoose = gameType.getSelectedIndex();
             name = inputName.getText().isEmpty() ? "Player1" : inputName.getText();
-            enemyName = inputEnemyName.getText().isEmpty() ? "Computer" : inputEnemyName.getText();
+            if(gameChoose == 0) enemyName = inputEnemyName.getText().isEmpty() ? "Player2" : inputEnemyName.getText();
+            else enemyName = inputEnemyName.getText().isEmpty() ? "Computer" : inputEnemyName.getText();
             //setVisible(false);
             //-------Netzwerk verbinden---------------------------------------------------------------
             if (gameType.getSelectedIndex() == 2) {

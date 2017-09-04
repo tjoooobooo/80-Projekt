@@ -53,7 +53,6 @@ public class Frame2 extends JFrame {
     Frame2(Frame1 frame1) {
         setTitle("Tic-Tac-Toe");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        // TODO spieler geht aus Server wenn er schließt
         setResizable(false);
         if (frame1.gameChoose == 2) setSize(new Dimension(600, 600));
         else setPreferredSize(new Dimension(650, 480));
@@ -63,7 +62,7 @@ public class Frame2 extends JFrame {
         countersPanel.setLayout(new java.awt.GridLayout(3, 3, 15, 20));
         jLabel2.setText(frame1.name + " wins:");
         jLabel2.setOpaque(true);
-        if(firstFrame.gameChoose == 0) jLabel2.setBackground(Color.green);
+        if (firstFrame.gameChoose == 0) jLabel2.setBackground(Color.green);
         countersPanel.add(jLabel2);
         player1Wins.setText("0");
         countersPanel.add(player1Wins);
@@ -86,12 +85,12 @@ public class Frame2 extends JFrame {
         gameStoneP2.setModel(new DefaultComboBoxModel<>(stoneTypes));
         gameStoneP2.setSelectedIndex(1);
         gameStoneP2.addActionListener(gameStoneListener);
-        if(firstFrame.gameChoose != 2){
+        if (firstFrame.gameChoose != 2) {
             gameStones.setLayout(new GridLayout());
             gameStones.add(gameStoneP1);
             gameStones.add(gameStoneP2);
             optionsPanel.add(gameStones);
-        } else if(firstFrame.network.getisServer()){
+        } else if (firstFrame.network.getisServer()) {
             optionsPanel.add(gameStoneP1);
         } else optionsPanel.add(gameStoneP2);
         jLabel8.setText("Select Background");
@@ -136,13 +135,13 @@ public class Frame2 extends JFrame {
         //-----Buttons----------------------------------------------
         giveUpButton.addActionListener(e -> {
             gameOver(true);
-            if(firstFrame.gameChoose == 2) sendChatText("!iGiveUp");
+            if (firstFrame.gameChoose == 2) sendChatText("!iGiveUp");
         });
         resetButton.addActionListener(e -> {
-            if(firstFrame.gameChoose == 2) {
+            if (firstFrame.gameChoose == 2) {
                 sendChatText("!reset?");
             } else resetStats();
-            if(firstFrame.gameChoose == 0){
+            if (firstFrame.gameChoose == 0) {
                 buttons[0].val = 1;
                 jLabel2.setBackground(Color.green);
                 jLabel3.setBackground(null);
@@ -252,18 +251,19 @@ public class Frame2 extends JFrame {
             sendChatButton.setVisible(false);
         } else updateButtons(firstFrame.network.isYourTurn());
     }
+
     //------------------------------------------------------------------------------------------------------------------------------------------
     ActionListener gameStoneListener = e -> {
-        if(firstFrame.gameChoose == 2) {
-            if(gameStoneP2.getSelectedIndex() != p2Stone || gameStoneP1.getSelectedIndex() != p1Stone){
-                System.out.println("action");
-                if (gameStoneP1.getSelectedIndex() == gameStoneP2.getSelectedIndex()) {
-                    gameStoneP1.setSelectedIndex(0);
-                    gameStoneP2.setSelectedIndex(1);
-                    JOptionPane.showMessageDialog(firstFrame, "You should select two different stones", "Invalid stone selection", JOptionPane.OK_OPTION);
-                } else {
-                    p1Stone = gameStoneP1.getSelectedIndex();
-                    p2Stone = gameStoneP2.getSelectedIndex();
+
+        if (gameStoneP2.getSelectedIndex() != p2Stone || gameStoneP1.getSelectedIndex() != p1Stone) {
+            if (gameStoneP1.getSelectedIndex() == gameStoneP2.getSelectedIndex()) {
+                gameStoneP1.setSelectedIndex(0);
+                gameStoneP2.setSelectedIndex(1);
+                JOptionPane.showMessageDialog(firstFrame, "You should select two different stones", "Invalid stone selection", JOptionPane.OK_OPTION);
+            } else {
+                p1Stone = gameStoneP1.getSelectedIndex();
+                p2Stone = gameStoneP2.getSelectedIndex();
+                if (firstFrame.gameChoose == 2) {
                     try {
                         firstFrame.network.dos.writeUTF(("/nehmeStein" + (firstFrame.network.getisServer() ? gameStoneP1.getSelectedIndex() : gameStoneP2.getSelectedIndex())));
                     } catch (IOException e1) {
@@ -274,8 +274,8 @@ public class Frame2 extends JFrame {
         }
     };
 
-    public void updateButtons(boolean update){
-        for(Field button : buttons) {
+    public void updateButtons(boolean update) {
+        for (Field button : buttons) {
             if (update) {
                 button.setEnabled(true);
                 giveUpButton.setEnabled(true);
@@ -290,7 +290,7 @@ public class Frame2 extends JFrame {
         text = text.isEmpty() ? chatInputPane.getText() : text;
         if (text.isEmpty() || text.equals("\n")) return;
         text = firstFrame.name + ": " + text;
-        if (!text.substring(firstFrame.name.length()+2,firstFrame.name.length()+3).equals("!")) addChatText(text);
+        if (!text.substring(firstFrame.name.length() + 2, firstFrame.name.length() + 3).equals("!")) addChatText(text);
         try {
             firstFrame.network.dos.writeUTF(text);
             firstFrame.network.dos.flush();
@@ -305,7 +305,7 @@ public class Frame2 extends JFrame {
         chatTextField.setText(String.valueOf(sB));
     }
 
-    public void resetStats(){
+    public void resetStats() {
         p1WinsCounter = p2WinsCounter = drawsCounter = 0;
         updateCounters();
         Field.t3 = new TicTacToe();
@@ -319,8 +319,8 @@ public class Frame2 extends JFrame {
         gameStoneP1.setEnabled(true);
         gameStoneP2.setEnabled(true);
         for (int i = 0; i < 9; i++) buttons[i].setIcon(null);
-        if(firstFrame.gameChoose == 0){
-            if(buttons[0].val == 1) {
+        if (firstFrame.gameChoose == 0) {
+            if (buttons[0].val == 1) {
                 jLabel2.setBackground(Color.green);
                 jLabel3.setBackground(null);
             } else {
@@ -342,7 +342,7 @@ public class Frame2 extends JFrame {
             }
         }
         if (Field.t3.isWin() || Field.t3.isDraw()) gameOver(false);
-        //--------------gegen Computer-----------------------------------------------------
+            //--------------gegen Computer-----------------------------------------------------
         else if (Frame1.gameChoose == 1) {
             int zug = (new Algorithmen(Field.t3).minimax()).getT3();
             TicTacToe tmp;
@@ -357,12 +357,11 @@ public class Frame2 extends JFrame {
 
     public void gameOver(boolean giveUp) {
         int nextGame;
-        if(Field.t3.isWin() || giveUp){
-            if(Field.val == -1) {
+        if (Field.t3.isWin() || giveUp) {
+            if (Field.val == -1) {
                 p1WinsCounter++;
-            }
-            else p2WinsCounter++;
-            if(firstFrame.network.getisServer())
+            } else p2WinsCounter++;
+            if (firstFrame.network.getisServer())
                 nextGame = JOptionPane.showConfirmDialog(null, (Field.val == -1 ? Frame1.name : Frame1.enemyName) + " has won\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
             else
                 nextGame = JOptionPane.showConfirmDialog(null, (Field.val == 1 ? Frame1.name : Frame1.enemyName) + " has won\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
@@ -370,8 +369,8 @@ public class Frame2 extends JFrame {
             drawsCounter++;
             nextGame = JOptionPane.showConfirmDialog(null, "Game is draw\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
         }
-        if(nextGame == 0) {
-            if(firstFrame.gameChoose != 2) Field.val = 1;
+        if (nextGame == 0) {
+            if (firstFrame.gameChoose != 2) Field.val = 1;
             Field.counter = 0;
             newGame();
             Field.t3 = new TicTacToe();
@@ -381,8 +380,9 @@ public class Frame2 extends JFrame {
         }
         updateCounters();
     }
+
     public void updateCounters() {
-        if(!firstFrame.network.getisServer()) {
+        if (!firstFrame.network.getisServer()) {
             player1Wins.setText(String.valueOf(p2WinsCounter));
             player2Wins.setText(String.valueOf(p1WinsCounter));
         } else {

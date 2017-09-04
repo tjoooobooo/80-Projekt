@@ -64,7 +64,6 @@ public class Frame1 extends JFrame {
             //-------Netzwerk verbinden---------------------------------------------------------------
             if (gameType.getSelectedIndex() == 2) {
                 frame1.remove(panel);
-                frame1.setPreferredSize(new Dimension(100,100));
                 frame1.setContentPane(new WaitingPanel());
                 frame1.validate();
 
@@ -77,7 +76,7 @@ public class Frame1 extends JFrame {
                     try {
                         network.dos.writeUTF(name);
                         enemyName = network.dis.readUTF();
-                        //enemyName = enemyName.equals("Player1") ? "Player" : enemyName;
+                        enemyName = enemyName.equals("Player1") ? "Player2" : enemyName;
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
@@ -101,6 +100,9 @@ public class Frame1 extends JFrame {
                                     int tmp;
                                     switch (s) {
                                         case "!kick":
+                                            if(!network.getisServer()){
+                                                secondFrame.optionsButton.doClick();
+                                            }
                                             break;
                                         case "!userDisconnected":
                                             if (network.getisServer()) {

@@ -9,41 +9,41 @@ public class Frame1 extends JFrame {
     static String enemyName;
     public static int gameChoose;
     JLabel names = new JLabel();
+    JTextField inputName = new JTextField();
+    JTextField inputEnemyName = new JTextField();
+    JTextField inputIP = new JTextField();
+    JButton button1, button2;
+    Frame1 frame1 = this;
+    Frame2 secondFrame;
 
     public static void main(String args[]) {
         new Frame1();
     }
 
     public Frame1() {
-        JTextField inputName = new JTextField();
-        JTextField inputEnemyName = new JTextField();
-        JTextField inputIP = new JTextField();
-        JButton button1, button2;
-
         setTitle("Tic-Tac-Toe");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setSize(350, 140);
-        getContentPane().setLayout(new GridLayout(4, 2));
-
-        add(new JLabel(" Choose Game Type"));
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(4, 2));
+        panel.add(new JLabel(" Choose Game Type"));
         gameType = new JComboBox(new String[]{"Local(PVP)", "Local(PVC)", "Online(PVP)"});
-        add(gameType);
-        add(new JLabel(" Write your Name"));
+        panel.add(gameType);
+        panel.add(new JLabel(" Write your Name"));
 
         names.setLayout(new GridLayout(1, 0));
         names.add(inputName);
         names.add(inputEnemyName);
-        add(names);
+        panel.add(names);
 
-        add(new JLabel("Choose IP-Address"));
-        add(inputIP);
+        panel.add(new JLabel("Choose IP-Address"));
+        panel.add(inputIP);
         button1 = new JButton("Confirm");
         button2 = new JButton("Cancel");
-        Frame1 frame1 = this;
 
         gameType.addActionListener(e -> {
-            if(gameType.getSelectedIndex() != 0) {
+            if (gameType.getSelectedIndex() != 0) {
                 names.remove(inputEnemyName);
 
             } else {
@@ -51,29 +51,37 @@ public class Frame1 extends JFrame {
             }
             names.repaint();
         });
+        panel.add(button1);
+        panel.add(button2);
+
+        button2.addActionListener(e -> System.exit(0));
+
         button1.addActionListener(e -> {
             gameChoose = gameType.getSelectedIndex();
             name = inputName.getText().isEmpty() ? "Player1" : inputName.getText();
             enemyName = inputEnemyName.getText().isEmpty() ? "Computer" : inputEnemyName.getText();
-            setVisible(false);
-            Frame2 secondFrame;
-            // TODO Fenster wird erst richtig angezeigt wenn verbindung da ist
+            //setVisible(false);
             //-------Netzwerk verbinden---------------------------------------------------------------
             if (gameType.getSelectedIndex() == 2) {
-                //Waiting frame = new Waiting();
-                network.setIP(inputIP.getText().isEmpty() ? "localhost" : inputIP.getText());
-                while (!network.isAccepted()) {
-                    network.listenForServerRequest();
-                }
-                try {
-                    network.dos.writeUTF(name);
-                    enemyName = network.dis.readUTF();
-                    //enemyName = enemyName.equals("Player1") ? "Player" : enemyName;
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                secondFrame = new Frame2(frame1);
+                frame1.remove(panel);
+                frame1.setPreferredSize(new Dimension(100,100));
+                frame1.setContentPane(new WaitingPanel());
+                frame1.validate();
+
                 Thread thread = new Thread(() -> {
+                    network.setIP(inputIP.getText().isEmpty() ? "localhost" : inputIP.getText());
+                    while (!network.isAccepted()) {
+                        network.listenForServerRequest();
+                    }
+                    setVisible(false);
+                    try {
+                        network.dos.writeUTF(name);
+                        enemyName = network.dis.readUTF();
+                        //enemyName = enemyName.equals("Player1") ? "Player" : enemyName;
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    secondFrame = new Frame2(frame1);
                     try {
                         while (secondFrame.serverActive) {
                             if (network.dis.available() == 4) {
@@ -81,15 +89,15 @@ public class Frame1 extends JFrame {
                                 secondFrame.updateButtons(true);
                                 secondFrame.buttons[tmp].doClick();
                                 network.swapTurn();
-                            } else if(network.dis.available() > 4) {
+                            } else if (network.dis.available() > 4) {
                                 String s = network.dis.readUTF();
-                                if ((s.replace(name, "")).replace(enemyName, "").substring(2,3).equals("!")) {
+                                if ((s.replace(name, "")).replace(enemyName, "").substring(2, 3).equals("!")) {
                                     s = s.replace(name, "").replace(enemyName, "");
-                                    s = s.substring(2,s.length());
+                                    s = s.substring(2, s.length());
                                     int tmp;
                                     switch (s) {
                                         case "!kick":
-                                            System.out.println("Du wurdest aus der Sitzung geworfen!");
+
                                             break;
                                         case "!leave":
                                             if (network.getisServer()) {
@@ -101,19 +109,18 @@ public class Frame1 extends JFrame {
                                             else System.exit(0);
                                             break;
                                         case "!iGiveUp":
-                                            JOptionPane.showMessageDialog(null,enemyName + " gave up", "YOU WON",JOptionPane.OK_OPTION);
+                                            JOptionPane.showMessageDialog(null, enemyName + " gave up", "YOU WON", JOptionPane.OK_OPTION);
                                             secondFrame.gameOver(true);
                                             break;
                                         case "!reset?":
-                                            tmp = JOptionPane.showConfirmDialog(null,"Opponnent asks if you want to reset the stats","Reset the stats?", JOptionPane.YES_NO_OPTION);
-                                            if(tmp == 0) {
+                                            tmp = JOptionPane.showConfirmDialog(null, "Opponnent asks if you want to reset the stats", "Reset the stats?", JOptionPane.YES_NO_OPTION);
+                                            if (tmp == 0) {
                                                 secondFrame.resetStats();
                                                 secondFrame.sendChatText("!reset");
-                                            }
-                                            else secondFrame.sendChatText("!resetDenied");
+                                            } else secondFrame.sendChatText("!resetDenied");
                                             break;
                                         case "!resetDenied":
-                                            JOptionPane.showMessageDialog(null,"Reset was denied","No reset", JOptionPane.OK_OPTION);
+                                            JOptionPane.showMessageDialog(null, "Reset was denied", "No reset", JOptionPane.OK_OPTION);
                                             break;
                                         case "!reset":
                                             secondFrame.resetStats();
@@ -139,12 +146,13 @@ public class Frame1 extends JFrame {
                 });
                 thread.setPriority(1);
                 thread.start();
-            } else secondFrame = new Frame2(frame1);
+            } else {
+                secondFrame = new Frame2(frame1);
+                setVisible(false);
+            }
             //--------------------------------------------------------------------------------------
         });
-        button2.addActionListener(e -> System.exit(0));
-        add(button1);
-        add(button2);
+        add(panel);
         setVisible(true);
     }
 }

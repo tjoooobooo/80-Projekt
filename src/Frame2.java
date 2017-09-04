@@ -81,10 +81,14 @@ public class Frame2 extends JFrame {
         gameStoneP1.setModel(new DefaultComboBoxModel<>(stoneTypes));
         gameStoneP2.setModel(new DefaultComboBoxModel<>(stoneTypes));
         gameStoneP2.setSelectedIndex(1);
-        gameStones.setLayout(new GridLayout());
-        gameStones.add(gameStoneP1);
-        gameStones.add(gameStoneP2);
-        optionsPanel.add(gameStones);
+        if(firstFrame.gameChoose != 2){
+            gameStones.setLayout(new GridLayout());
+            gameStones.add(gameStoneP1);
+            gameStones.add(gameStoneP2);
+            optionsPanel.add(gameStones);
+        } else {
+            optionsPanel.add(gameStoneP1);
+        }
         jLabel8.setText("Select Background");
         optionsPanel.add(jLabel8);
         background.setModel(new DefaultComboBoxModel<>(new String[]{"default", "blue", "pink", "yellow"}));
@@ -136,6 +140,11 @@ public class Frame2 extends JFrame {
             if(firstFrame.gameChoose == 2) {
                 sendChatText("!reset?");
             } else resetStats();
+            if(firstFrame.gameChoose == 0){
+                buttons[0].val = 1;
+                jLabel2.setBackground(Color.green);
+                jLabel3.setBackground(null);
+            }
 
         });
         optionsButton.addActionListener(e -> {

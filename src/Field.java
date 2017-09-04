@@ -40,20 +40,9 @@ public class Field extends JButton implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(t3.getBoard()[fieldnumber] != 0) {
             JOptionPane.showMessageDialog(null, "This place is already taken!", "Wrong move", JOptionPane.OK_OPTION);
-
         } else if(secondFrame.gameStoneP1.getSelectedIndex() == secondFrame.gameStoneP2.getSelectedIndex()) {
             JOptionPane.showMessageDialog(null,"You should select two different stones", "Invalid stone selection",JOptionPane.OK_OPTION);
-
         } else {
-            if(secondFrame.firstFrame.gameChoose == 0){
-                if(val == -1) {
-                    secondFrame.jLabel2.setBackground(Color.green);
-                    secondFrame.jLabel3.setBackground(null);
-                } else {
-                    secondFrame.jLabel3.setBackground(Color.green);
-                    secondFrame.jLabel2.setBackground(null);
-                }
-            }
             buttonNumber = fieldnumber;
             secondFrame.gameStoneP1.setEnabled(false);
             secondFrame.gameStoneP2.setEnabled(false);
@@ -76,6 +65,15 @@ public class Field extends JButton implements ActionListener {
             t3 = tmp;
             secondFrame.updateButtons(!secondFrame.firstFrame.network.isYourTurn());
             secondFrame.check(fieldnumber);
+        }
+        if(secondFrame.firstFrame.gameChoose == 0){
+            if(val == -1) {
+                secondFrame.jLabel2.setBackground(Color.green);
+                secondFrame.jLabel3.setBackground(null);
+            } else {
+                secondFrame.jLabel3.setBackground(Color.green);
+                secondFrame.jLabel2.setBackground(null);
+            }
         }
 
     }

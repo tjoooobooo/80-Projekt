@@ -84,7 +84,6 @@ public class Frame1 extends JFrame {
                     secondFrame = new Frame2(frame1);
                     try {
                         while (network.isAccepted()) {
-                            network.dos.writeUTF(("/nehmeStein" + (network.getisServer() ? secondFrame.gameStoneP1.getSelectedIndex() : secondFrame.gameStoneP2.getSelectedIndex())));
                             if (network.dis.available() == 4) {
                                 Integer tmp = network.dis.readInt();
                                 secondFrame.updateButtons(true);
@@ -94,8 +93,7 @@ public class Frame1 extends JFrame {
                                 String s = network.dis.readUTF();
                                 if (s.startsWith("/nehmeStein")) {
                                     s = s.replace("/nehmeStein", "");
-                                    if (network.getisServer())
-                                        secondFrame.gameStoneP2.setSelectedIndex(Integer.parseInt(s));
+                                    if (network.getisServer()) secondFrame.gameStoneP2.setSelectedIndex(Integer.parseInt(s));
                                     else secondFrame.gameStoneP1.setSelectedIndex(Integer.parseInt(s));
                                 } else if ((s.replace(name, "")).replace(enemyName, "").substring(2, 3).equals("!")) {
                                     s = s.replace(name, "").replace(enemyName, "");

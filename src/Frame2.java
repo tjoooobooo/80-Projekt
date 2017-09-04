@@ -47,6 +47,9 @@ public class Frame2 extends JFrame {
     static int p2WinsCounter = 0;
     static int drawsCounter = 0;
 
+    int p1Stone;
+    int p2Stone;
+
     Frame2(Frame1 frame1) {
         setTitle("Tic-Tac-Toe");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -79,8 +82,10 @@ public class Frame2 extends JFrame {
         optionsPanel.add(jLabel1);
         String[] stoneTypes = {"X", "O", "Monkey", "Cat", "Penguin", "Crown", "Smiley"};
         gameStoneP1.setModel(new DefaultComboBoxModel<>(stoneTypes));
+        gameStoneP1.addActionListener(gameStoneListener);
         gameStoneP2.setModel(new DefaultComboBoxModel<>(stoneTypes));
         gameStoneP2.setSelectedIndex(1);
+        gameStoneP2.addActionListener(gameStoneListener);
         if(firstFrame.gameChoose != 2){
             gameStones.setLayout(new GridLayout());
             gameStones.add(gameStoneP1);
@@ -94,12 +99,9 @@ public class Frame2 extends JFrame {
         background.setModel(new DefaultComboBoxModel<>(new String[]{"default", "blue", "pink", "yellow"}));
         Color[] colors = {null, Color.blue, Color.pink, Color.yellow};
         optionsPanel.add(background);
-        background.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                for (Field button : buttons) {
-                    button.setBackground(colors[background.getSelectedIndex()]);
-                }
+        background.addActionListener(e -> {
+            for (Field button : buttons) {
+                button.setBackground(colors[background.getSelectedIndex()]);
             }
         });
         //-------Tic Tac Toe field-------------------
@@ -251,6 +253,25 @@ public class Frame2 extends JFrame {
         } else updateButtons(firstFrame.network.isYourTurn());
     }
     //------------------------------------------------------------------------------------------------------------------------------------------
+    ActionListener gameStoneListener = e -> {
+        if(gameStoneP2.getSelectedIndex() != p2Stone || gameStoneP1.getSelectedIndex() != p1Stone){
+            System.out.println("action");
+            if (gameStoneP1.getSelectedIndex() == gameStoneP2.getSelectedIndex()) {
+                gameStoneP1.setSelectedIndex(0);
+                gameStoneP2.setSelectedIndex(1);
+                JOptionPane.showMessageDialog(firstFrame, "You should select two different stones", "Invalid stone selection", JOptionPane.OK_OPTION);
+            } else {
+                p1Stone = gameStoneP1.getSelectedIndex();
+                p2Stone = gameStoneP2.getSelectedIndex();
+                try {
+                    firstFrame.network.dos.writeUTF(("/nehmeStein" + (firstFrame.network.getisServer() ? gameStoneP1.getSelectedIndex() : gameStoneP2.getSelectedIndex())));
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+    };
+
     public void updateButtons(boolean update){
         for(Field button : buttons) {
             if (update) {

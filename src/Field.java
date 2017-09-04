@@ -40,8 +40,6 @@ public class Field extends JButton implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(t3.getBoard()[fieldnumber] != 0) {
             JOptionPane.showMessageDialog(null, "This place is already taken!", "Wrong move", JOptionPane.OK_OPTION);
-        } else if(secondFrame.gameStoneP1.getSelectedIndex() == secondFrame.gameStoneP2.getSelectedIndex()) {
-            JOptionPane.showMessageDialog(null,"You should select two different stones", "Invalid stone selection",JOptionPane.OK_OPTION);
         } else {
             buttonNumber = fieldnumber;
             secondFrame.gameStoneP1.setEnabled(false);

@@ -12,12 +12,11 @@ import java.util.Scanner;
 public class Network {
 
     private String ip = "localhost";
-    private String name = "Guest";
     private int port = 42000;
     public Socket socket;
     public DataOutputStream dos;
     public DataInputStream dis;
-     ServerSocket serverSocket;
+    ServerSocket serverSocket;
 
     private boolean accepted = false;
     private boolean yourTurn;
@@ -105,5 +104,6 @@ public class Network {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        accepted = false;
     }
 }

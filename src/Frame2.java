@@ -148,14 +148,14 @@ public class Frame2 extends JFrame {
 
         });
         optionsButton.addActionListener(e -> {
-            Field.t3 = new TicTacToe();
-            setVisible(false);
-            firstFrame = new Frame1();
             if (firstFrame.gameChoose == 2 && serverActive) {
-                sendChatText("!leave");
+                sendChatText("!userDisconnected");
                 firstFrame.network.closeServer();
                 serverActive = false;
             }
+            Field.t3 = new TicTacToe();
+            setVisible(false);
+            firstFrame = new Frame1();
         });
 
         sendChatButton.addActionListener(e -> {
@@ -353,12 +353,7 @@ public class Frame2 extends JFrame {
             newGame();
             Field.t3 = new TicTacToe();
         } else {
-            try {
-                firstFrame.network.dos.writeUTF("!userDisconnected");
-                firstFrame.network.dos.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            sendChatText("!userDisconnected");
             System.exit(0);
         }
         updateCounters();

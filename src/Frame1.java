@@ -83,7 +83,7 @@ public class Frame1 extends JFrame {
                     }
                     secondFrame = new Frame2(frame1);
                     try {
-                        while (secondFrame.serverActive) {
+                        while (network.isAccepted()) {
                             if (network.dis.available() == 4) {
                                 Integer tmp = network.dis.readInt();
                                 secondFrame.updateButtons(true);
@@ -97,14 +97,15 @@ public class Frame1 extends JFrame {
                                     int tmp;
                                     switch (s) {
                                         case "!kick":
-
                                             break;
-                                        case "!leave":
+                                        case "!userDisconnected":
                                             if (network.getisServer()) {
                                                 tmp = JOptionPane.showConfirmDialog(null, "Client has left game\nback to game options?", "Client disconnected", JOptionPane.OK_CANCEL_OPTION);
                                             } else {
                                                 tmp = JOptionPane.showConfirmDialog(null, "Server has left game\nback to game options?", "Server disconnected", JOptionPane.OK_CANCEL_OPTION);
                                             }
+                                            network.closeServer();
+                                            secondFrame.serverActive = false;
                                             if (tmp == 0) secondFrame.optionsButton.doClick();
                                             else System.exit(0);
                                             break;

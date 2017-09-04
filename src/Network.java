@@ -5,30 +5,26 @@ import java.net.Socket;
 import java.util.Objects;
 import java.util.Scanner;
 
-/**
- * Created by Philipp on 14.08.2017.
- */
-@SuppressWarnings("Duplicates")
 public class Network {
 
     private String ip = "localhost";
     private int port = 42000;
-    public Socket socket;
-    public DataOutputStream dos;
-    public DataInputStream dis;
-    ServerSocket serverSocket;
+    private Socket socket;
+    DataOutputStream dos;
+    DataInputStream dis;
+    private ServerSocket serverSocket;
 
     private boolean accepted = false;
     private boolean yourTurn;
     private boolean isServer = true;
 
 
-    public void setIP(String ip){
+    void setIP(String ip){
         this.ip = ip;
         if (!connect()) initializeServer();
     }
 
-    public void listenForServerRequest() {
+    void listenForServerRequest() {
         Socket socket = null;
         try {
             socket = serverSocket.accept();
@@ -42,7 +38,7 @@ public class Network {
         }
     }
 
-    public boolean connect() {
+    private boolean connect() {
         try {
             socket = new Socket(ip, port);
             dos = new DataOutputStream(socket.getOutputStream());
@@ -58,7 +54,7 @@ public class Network {
         return true;
     }
 
-    public void initializeServer() {
+    private void initializeServer() {
         try {
             serverSocket = new ServerSocket(port, 8);
         } catch (Exception e) {
@@ -80,23 +76,23 @@ public class Network {
         yourTurn = false;
     }
 
-    public boolean isAccepted() {
+    boolean isAccepted() {
         return accepted;
     }
 
-    public boolean isYourTurn() {
+    boolean isYourTurn() {
         return yourTurn;
     }
 
-    public void swapTurn() {
+    void swapTurn() {
         yourTurn = !yourTurn;
     }
 
-    public boolean getisServer() {
+    boolean getisServer() {
         return isServer;
     }
 
-    public void closeServer() {
+    void closeServer() {
         accepted = false;
         if(isServer) try {
             serverSocket.close();

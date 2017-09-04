@@ -254,19 +254,21 @@ public class Frame2 extends JFrame {
     }
     //------------------------------------------------------------------------------------------------------------------------------------------
     ActionListener gameStoneListener = e -> {
-        if(gameStoneP2.getSelectedIndex() != p2Stone || gameStoneP1.getSelectedIndex() != p1Stone){
-            System.out.println("action");
-            if (gameStoneP1.getSelectedIndex() == gameStoneP2.getSelectedIndex()) {
-                gameStoneP1.setSelectedIndex(0);
-                gameStoneP2.setSelectedIndex(1);
-                JOptionPane.showMessageDialog(firstFrame, "You should select two different stones", "Invalid stone selection", JOptionPane.OK_OPTION);
-            } else {
-                p1Stone = gameStoneP1.getSelectedIndex();
-                p2Stone = gameStoneP2.getSelectedIndex();
-                try {
-                    firstFrame.network.dos.writeUTF(("/nehmeStein" + (firstFrame.network.getisServer() ? gameStoneP1.getSelectedIndex() : gameStoneP2.getSelectedIndex())));
-                } catch (IOException e1) {
-                    e1.printStackTrace();
+        if(firstFrame.gameChoose == 2) {
+            if(gameStoneP2.getSelectedIndex() != p2Stone || gameStoneP1.getSelectedIndex() != p1Stone){
+                System.out.println("action");
+                if (gameStoneP1.getSelectedIndex() == gameStoneP2.getSelectedIndex()) {
+                    gameStoneP1.setSelectedIndex(0);
+                    gameStoneP2.setSelectedIndex(1);
+                    JOptionPane.showMessageDialog(firstFrame, "You should select two different stones", "Invalid stone selection", JOptionPane.OK_OPTION);
+                } else {
+                    p1Stone = gameStoneP1.getSelectedIndex();
+                    p2Stone = gameStoneP2.getSelectedIndex();
+                    try {
+                        firstFrame.network.dos.writeUTF(("/nehmeStein" + (firstFrame.network.getisServer() ? gameStoneP1.getSelectedIndex() : gameStoneP2.getSelectedIndex())));
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
         }

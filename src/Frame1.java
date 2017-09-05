@@ -8,7 +8,7 @@ public class Frame1 extends JFrame {
     static String name;
     static String enemyName;
     static int gameChoose;
-    private JLabel names = new JLabel();
+    private JPanel names = new JPanel();
     private JTextField inputName = new JTextField();
     private JTextField inputEnemyName = new JTextField();
     private JTextField inputIP = new JTextField();
@@ -35,6 +35,7 @@ public class Frame1 extends JFrame {
         names.add(inputEnemyName);
         panel.add(names);
 
+
         panel.add(new JLabel("Choose IP-Address"));
         panel.add(inputIP);
         JButton button1 = new JButton("Confirm");
@@ -43,7 +44,6 @@ public class Frame1 extends JFrame {
         gameType.addActionListener(e -> {
             if (gameType.getSelectedIndex() != 0) {
                 names.remove(inputEnemyName);
-
             } else {
                 names.add(inputEnemyName);
             }

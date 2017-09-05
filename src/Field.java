@@ -73,7 +73,6 @@ public class Field extends JButton implements ActionListener {
                 secondFrame.jLabel2.setBackground(null);
             }
         }
-
     }
 
 }

@@ -314,7 +314,6 @@ class Frame2 extends JFrame {
         gameStoneP2.setEnabled(true);
         for (int i = 0; i < 9; i++) buttons[i].setIcon(null);
         if (Frame1.gameChoose == 0) {
-            Field.val = -Field.val;
             if (Field.val == 1) {
                 jLabel2.setBackground(Color.green);
                 jLabel3.setBackground(null);
@@ -343,6 +342,7 @@ class Frame2 extends JFrame {
             TicTacToe tmp;
             tmp = (TicTacToe) Field.t3.makeMove(new Move(zug));
             buttons[zug].setIcon(Field.val == 1 ? Field.icons[gameStoneP1.getSelectedIndex()] : Field.icons[gameStoneP2.getSelectedIndex()]);
+            Field.val = -Field.val;
             Field.t3 = tmp;
             if (Field.t3.isWin() || Field.t3.isDraw()) gameOver(false);
         }
@@ -364,7 +364,8 @@ class Frame2 extends JFrame {
             nextGame = JOptionPane.showConfirmDialog(null, "Game is draw\nStart a new Game?", "Game End", JOptionPane.OK_CANCEL_OPTION);
         }
         if (nextGame == 0) {
-            if (Frame1.gameChoose != 2) Field.val = -Field.val;
+            if (Frame1.gameChoose == 1) Field.val = 1;
+            //else if (Frame1.gameChoose == 0) Field.val = -Field.val;
             Field.counter = 0;
             newGame();
             Field.t3 = new TicTacToe();

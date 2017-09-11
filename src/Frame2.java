@@ -369,7 +369,7 @@ class Frame2 extends JFrame {
             Field.counter = 0;
             newGame();
             Field.t3 = new TicTacToe();
-        } else {
+        } else if(Frame1.gameChoose == 2) {
             sendChatText("!userDisconnected");
             System.exit(0);
         }
